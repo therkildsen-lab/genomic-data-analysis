@@ -19,5 +19,5 @@ fi
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 echo $POP
-/workdir/Programs/angsd/angsd -b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' -anc $REFERENCE -out $OUTDIR$POP'_'$OUTBASE'_popminind'$MININD -dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -P 2 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -sites $SNPLIST >& $BASEDIR'nohups/'$POP'_'$OUTBASE'_maf.log'
+/workdir/Programs/angsd/angsd -b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' -anc $REFERENCE -out $OUTDIR$POP'_'$OUTBASE'_popminind'$MININD -dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -P 16 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -sites $SNPLIST >& $BASEDIR'nohups/'$POP'_'$OUTBASE'_maf.log'
 done
