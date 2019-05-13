@@ -9,5 +9,5 @@ OUTNAME=$5 # Prefix of the output bam lists. An example from the Greenland cod p
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 echo $POP
-grep -w $POP $SAMPLETABLE | cut -f1 | awk '$1=$BASEDIR"bam/"$1$BAM_SUFFIX' > $BASEDIR'sample_lists/bam_list_per_pop/'$OUTNAME$POP'.txt'
+grep -w $POP $SAMPLETABLE | cut -f1 | awk -v a="$BASEDIR" b="$BAMFILESUFFIX" '$1=a"bam/"$1b' > $BASEDIR'sample_lists/bam_list_per_pop/'$OUTNAME$POP'.txt'
 done
