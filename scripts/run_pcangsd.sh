@@ -12,16 +12,16 @@ PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'`
 if [ $ANALYSIS = pca ]; then
 python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-else [ $ANALYSIS = selection ]
+elif [ $ANALYSIS = selection ]
 python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -selection -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-else [ $ANALYSIS = inbreedSites ]
+elif [ $ANALYSIS = inbreedSites ]
 python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -inbreedSites -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-else [ $ANALYSIS = kinship ]
+elif [ $ANALYSIS = kinship ]
 python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -kinship -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-else [ $ANALYSIS = admix ]
+elif [ $ANALYSIS = admix ]
 for K in {1..10}; do
 python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -admix -admix_K $K -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 done
