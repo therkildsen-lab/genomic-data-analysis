@@ -10,20 +10,20 @@ ANALYSIS=$4 # Type of analysis with pcangsd. It can be one of the following: pca
 PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
 
 if [ $ANALYSIS = pca ]; then
-python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
+	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-elif [ $ANALYSIS = selection ]
-python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -selection -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
+elif [ $ANALYSIS = selection ]; then 
+	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -selection -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-elif [ $ANALYSIS = inbreedSites ]
-python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -inbreedSites -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
+elif [ $ANALYSIS = inbreedSites ]; then 
+	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -inbreedSites -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-elif [ $ANALYSIS = kinship ]
-python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -kinship -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
+elif [ $ANALYSIS = kinship ]; then 
+	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -kinship -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
-elif [ $ANALYSIS = admix ]
-for K in {1..10}; do
-python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -admix -admix_K $K -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
-done
+elif [ $ANALYSIS = admix ]; then 
+	for K in {1..10}; do
+		python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -admix -admix_K $K -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
+	done
 
 fi
