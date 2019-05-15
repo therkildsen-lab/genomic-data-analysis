@@ -22,8 +22,6 @@ elif [ $ANALYSIS = kinship ]; then
 	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -kinship -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
 elif [ $ANALYSIS = admix ]; then 
-	for K in {1..10}; do
-		python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -admix -admix_K $K -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
-	done
+	python /workdir/programs/pcangsd/pcangsd.py -beagle $BEAGLE -admix -minMaf $MINMAF -threads 16 -o $BASEDIR'angsd/pcangsd_'$PREFIX
 
 fi
