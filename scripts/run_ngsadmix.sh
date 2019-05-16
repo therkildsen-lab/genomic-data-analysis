@@ -8,7 +8,6 @@ MINK=$4 # Minimum number of K
 MAXK=$5 # Maximum number of K
 
 PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
-echo $PREFIX
 
 for ((K = $MINK; K <= $MAXK; i++)); do
 	#run ngsAdmix
