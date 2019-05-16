@@ -139,15 +139,16 @@ PCA <- function(cov_matrix, ind_label, pop_label, x_axis, y_axis, show.point=T, 
   # show.line: whether to show lines connecting population means with each individual point
   # alpha: the transparency of ellipses
   # index_exclude: the indices of individuals to exclude from the analysis
+  index_include <- setdiff(seq_along(ind_label), index_exclude)
   m <- as.matrix(cov_matrix)
   m[is.na(m)]<- median(m, na.rm = T)
-  m<-m[setdiff(seq_along(ind_label), index_exclude),setdiff(seq_along(ind_label), index_exclude)] ## Remove 4SJH, four 3Ps individuals, and contaminated ones
+  m<-m[index_include, index_include] ## Remove 4SJH, four 3Ps individuals, and contaminated ones
   e <- eigen(m)
   e_value<-e$values
   x_variance<-e_value[x_axis]/sum(e_value)*100
   y_variance<-e_value[y_axis]/sum(e_value)*100
   e <- as.data.frame(e$vectors)
-  e <- cbind(ind_label, pop_label, e) ## with the above individuals removed
+  e <- cbind(ind_label[index_include], pop_label[index_include], e) ## with the above individuals removed
   #colnames(e)[3:331]<-paste0("PC",1:329)
   colnames(e)[3:(dim(e)[1])]<-paste0("PC",1:(dim(e)[1]-2)) ## with the above individuals removed
   colnames(e)[1:2]<-c("individual", "population")
