@@ -8,8 +8,10 @@ MINK=$4 # Minimum number of K
 MAXK=$5 # Maximum number of K
 
 PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
+echo $PREFIX
 
 for ((K = $MINK; K <= $MAXK; i++)); do
 	#run ngsAdmix
+	echo $K
 	/workdir/Programs/NGSadmix -likes $BEAGLE -K $K -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
 done
