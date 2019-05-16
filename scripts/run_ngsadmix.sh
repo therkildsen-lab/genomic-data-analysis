@@ -12,5 +12,5 @@ PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'`
 for ((K = $MINK; K <= $MAXK; K++)); do
 	#run ngsAdmix
 	echo $K
-	#/workdir/Programs/NGSadmix -likes $BEAGLE -K $K -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
+	/workdir/Programs/NGSadmix -likes $BEAGLE -K $K -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
 done
