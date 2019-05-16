@@ -4,11 +4,12 @@
 BASEDIR=$1 # Path to the base directory where adapter clipped fastq file are stored in a subdirectory titled "adapter_clipped" and into which output files will be written to separate subdirectories. An example for the Greenland cod data is: /workdir/cod/greenland-cod/
 BEAGLE=$2 # Path to the beagle formatted genotype likelihood file
 MINMAF=$3 # Minimum allele frequency filter
-K=$4 # Number of K. Should be formatted as an array. e.g. (1 2 3 4 5 6 7 8 9)
+MINK=$4 # Minimum number of K
+MAXK=$5 # Maximum number of K
 
 PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
 
-for I in "${K[@]}"; do
+for ((K = $MINK; K <= $MAXK; i++)); do
 	#run ngsAdmix
-	/workdir/Programs/NGSadmix -likes $BEAGLE -K $I -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
+	/workdir/Programs/NGSadmix -likes $BEAGLE -K $K -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
 done
