@@ -12,7 +12,7 @@ J=1
 for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 	for POP2 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 		if [ $I -lt $J ]; then
-			#echo $POP1'_'$POP2			
+			echo $POP1'_'$POP2			
 			## Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)
 			#/workdir/Programs/angsd//misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
 			## Estimating Fst in angsd
