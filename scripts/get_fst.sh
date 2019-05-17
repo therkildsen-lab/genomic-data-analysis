@@ -7,9 +7,10 @@ POPCOLUMN=$3 # The column index of the variable that you want to group by in the
 BASENAME=$4 # Base name of the saf files excluding ".saf.gz". It will be used as the base name of all output files. An example from the Greenland cod project is _bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2
 
 cd $SAFDIR
+
 I=1
-J=1
 for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
+	J=1
 	for POP2 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 		if [ $I -lt $J ]; then
 			echo $POP1'_'$POP2			
