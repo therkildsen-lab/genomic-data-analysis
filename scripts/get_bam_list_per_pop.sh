@@ -8,8 +8,7 @@ BAMLIST=$4 # The full bam list that you want to subset from. An example from the
 OUTNAME=$5 # Prefix of the output bam lists. An example from the Greenland cod project is bam_list_realigned_
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
-echo $POP
-SAMPLESEQID=`grep -w $POP $SAMPLETABLE | cut -f1` 
-grep -F "${SAMPLESEQID}" $BAMLIST > $BASEDIR'sample_lists/bam_list_per_pop/'$OUTNAME$POP'.txt'
-
+	echo $POP
+	SAMPLESEQID=`grep -w $POP $SAMPLETABLE | cut -f1` 
+	grep -F "${SAMPLESEQID}" $BAMLIST > $BASEDIR'sample_lists/bam_list_per_pop/'$OUTNAME$POP'.txt'
 done
