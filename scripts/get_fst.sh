@@ -21,7 +21,7 @@ for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 			/workdir/Programs/angsd/misc/realSFS fst print $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.alpha_beta.txt'
 			awk '{ print $0 "\t" $3 / $4 }' $POP1'_'$POP2$BASENAME'.alpha_beta.txt' > $POP1'_'$POP2$BASENAME'.fst'
 			# Estimating average Fst in angsd
-			/workdir/Programs/angsd/misc/realSFS fst stats $POP1'_'$POP2$BASENAME'.fst.idx' > $POP1'_'$POP2$BASENAME'.average_fst.txt' 
+			/workdir/Programs/angsd/misc/realSFS fst stats $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.average_fst.txt' 
 		fi
 		J=$((J+1))
 	done
