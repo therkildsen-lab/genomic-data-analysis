@@ -13,15 +13,21 @@ for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 	J=1
 	for POP2 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 		if [ $I -lt $J ]; then
-			echo $POP1'_'$POP2			
-			# Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)
-			/workdir/Programs/angsd//misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
-			# Estimating Fst in angsd
-			/workdir/Programs/angsd/misc/realSFS fst index  $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' -sfs $POP1'_'$POP2$BASENAME'.2dSFS' -fstout $POP1'_'$POP2$BASENAME'.alpha_beta'
-			/workdir/Programs/angsd/misc/realSFS fst print $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.alpha_beta.txt'
-			awk '{ print $0 "\t" $3 / $4 }' $POP1'_'$POP2$BASENAME'.alpha_beta.txt' > $POP1'_'$POP2$BASENAME'.fst'
-			# Estimating average Fst in angsd
-			/workdir/Programs/angsd/misc/realSFS fst stats $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.average_fst.txt' 
+			echo $POP1'_'$POP2
+			# Check if Fst output already exists
+			if [ ! -f $POP1'_'$POP2$BASENAME'.fst' ]; then
+				# Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)
+				/workdir/Programs/angsd//misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
+				# Estimating Fst in angsd
+				/workdir/Programs/angsd/misc/realSFS fst index  $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' -sfs $POP1'_'$POP2$BASENAME'.2dSFS' -fstout $POP1'_'$POP2$BASENAME'.alpha_beta'
+				/workdir/Programs/angsd/misc/realSFS fst print $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.alpha_beta.txt'
+				awk '{ print $0 "\t" $3 / $4 }' $POP1'_'$POP2$BASENAME'.alpha_beta.txt' > $POP1'_'$POP2$BASENAME'.fst'
+			fi
+			# Check if average Fst output already exists
+			if [ ! -f $POP1'_'$POP2$BASENAME'.average_fst.txt' ]; then
+				# Estimating average Fst in angsd
+				/workdir/Programs/angsd/misc/realSFS fst stats $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.average_fst.txt' 
+			fi
 		fi
 		J=$((J+1))
 	done
