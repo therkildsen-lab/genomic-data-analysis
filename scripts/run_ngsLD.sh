@@ -1,8 +1,8 @@
 #!/bin/bash
-INDIR=$1 # Path to directory of inputfiles
+INDIR=$1 # Path to directory of inputfiles (takes genotype likelihood file based on angsd -doGLF 3, file has to be unzipped)
 OUTDIR=$2 # Path to directory for outfiles
 INPUT=$3 #Basename for inputfile
-SNPLIST=$4 #List of SNPs with positions
+SNPLIST=$4 #List of SNPs with positions (.glf.pos.gz file - angsd output with -doGLF 3, file has to be unzipped).
 NIND=$5 #N ind per pop
 NSITES=$6 #N sites per pop
 POP=$7 #PopID for output
