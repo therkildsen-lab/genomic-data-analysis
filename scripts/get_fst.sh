@@ -16,17 +16,30 @@ for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 			echo $POP1'_'$POP2
 			# Check if Fst output already exists
 			if [ ! -f $POP1'_'$POP2$BASENAME'.fst' ]; then
-				# Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)
-				/workdir/Programs/angsd//misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
+				# Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)				
+				/workdir/Programs/angsd/misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
 				# Estimating Fst in angsd
 				/workdir/Programs/angsd/misc/realSFS fst index  $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' -sfs $POP1'_'$POP2$BASENAME'.2dSFS' -fstout $POP1'_'$POP2$BASENAME'.alpha_beta'
 				/workdir/Programs/angsd/misc/realSFS fst print $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.alpha_beta.txt'
 				awk '{ print $0 "\t" $3 / $4 }' $POP1'_'$POP2$BASENAME'.alpha_beta.txt' > $POP1'_'$POP2$BASENAME'.fst'
+				# Check if the output is empty
+				if [ ! -s $POP1'_'$POP2$BASENAME'.2dSFS' ]; then 
+					# This is needed because sometimes the previous two commands gives an empty output. Then we just need to reverse the order of the two populations.
+					/workdir/Programs/angsd/misc/realSFS $POP2$BASENAME'.saf.idx' $POP1$BASENAME'.saf.idx' > $POP2'_'$POP1$BASENAME'.2dSFS'
+					/workdir/Programs/angsd/misc/realSFS fst index  $POP2$BASENAME'.saf.idx' $POP1$BASENAME'.saf.idx' -sfs $POP2'_'$POP1$BASENAME'.2dSFS' -fstout $POP2'_'$POP1$BASENAME'.alpha_beta'
+					/workdir/Programs/angsd/misc/realSFS fst print $POP2'_'$POP1$BASENAME'.alpha_beta.fst.idx' > $POP2'_'$POP1$BASENAME'.alpha_beta.txt'
+					awk '{ print $0 "\t" $3 / $4 }' $POP2'_'$POP1$BASENAME'.alpha_beta.txt' > $POP2'_'$POP1$BASENAME'.fst'
+				fi
 			fi
 			# Check if average Fst output already exists
 			if [ ! -f $POP1'_'$POP2$BASENAME'.average_fst.txt' ]; then
 				# Estimating average Fst in angsd
 				/workdir/Programs/angsd/misc/realSFS fst stats $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.average_fst.txt' 
+				# Check if the output is empty
+				if [ ! -s $POP1'_'$POP2$BASENAME'.average_fst.txt' ]; then 
+					# This is needed because sometimes the previous two commands gives an empty output. Then we just need to reverse the order of the two populations.
+					/workdir/Programs/angsd/misc/realSFS fst stats $POP2'_'$POP1$BASENAME'.alpha_beta.fst.idx' > $POP2'_'$POP1$BASENAME'.average_fst.txt' 
+				fi
 			fi
 		fi
 		J=$((J+1))
