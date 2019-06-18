@@ -18,21 +18,21 @@ BEAGLEDIR=`echo $BEAGLE | sed 's:/[^/]*$::' | awk '$1=$1"/"'`
 
 for LG in `cat $LGLIST`; do
 	echo "Splitting "$LG
-	zcat $BEAGLEDIR$PREFIX"_"$LG".beagle.gz" | tail -n +2 | split -d --lines $SNP - --filter='bash -c "{ zcat ${FILE%.*} | head -n1; cat; } > $FILE"' $BEAGLEDIR$PREFIX"_"$LG".beagle."$SNP"snp.x" &
+	zcat $BEAGLEDIR$PREFIX"_"$LG".beagle.gz" | tail -n +2 | split -d --lines $SNP - --filter='bash -c "{ zcat ${FILE%.*} | head -n1; cat; } > $FILE"' $BEAGLEDIR$PREFIX"_"$LG".beagle.x" &
 done
 
 wait
 
 for LG in `cat $LGLIST`; do
 	echo "Zipping "$LG
-	gzip $BEAGLEDIR$PREFIX"_"$LG".beagle."$SNP"snp.x"* &
+	gzip $BEAGLEDIR$PREFIX"_"$LG".beagle.x"* &
 done
 
 wait
 
 for LG in `cat $LGLIST`; do
 	echo "Moving "$LG
-	mv $BEAGLEDIR$PREFIX"_"$LG".beagle."$SNP"snp.x"* $BEAGLEDIR"local_pca/" &
+	mv $BEAGLEDIR$PREFIX"_"$LG".beagle.x"* 	$BEAGLEDIR"local_pca/" &
 done
 
 wait
