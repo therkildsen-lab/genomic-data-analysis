@@ -30,7 +30,7 @@ pca_summary <- c(sum(c^2), e_values[1:pc], unlist(e_vectors[1:pc], use.names=FAL
 	as.data.frame()
 write_tsv(pca_summary, paste0(out_dir, "pca_summary_", snp, "snp_", lg, ".tsv"), append=T, col_names=F)
 
-suppressWarnings(b <- read_tsv(beagle))
+suppressWarnings(suppressMessages(b <- read_tsv(beagle)))
 snp_position <- c(b[[1,1]], b[[dim(b)[1],1]]) %>%
 	matrix(nrow = 1) %>%
 	as.data.frame()
