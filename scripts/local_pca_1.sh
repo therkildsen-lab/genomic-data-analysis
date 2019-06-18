@@ -1,7 +1,8 @@
 BEAGLEDIR=$1
 PREFIX=$2
 LG=$3
-SNP=$4
+PC=$4
+SNP=$5
 
 for INPUT in `ls $BEAGLEDIR"local_pca/"$PREFIX"_"$LG".beagle.x"*`; do
 	python /workdir/programs/pcangsd/pcangsd.py -beagle $INPUT -o $INPUT
