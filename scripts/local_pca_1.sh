@@ -1,3 +1,8 @@
+#!/bin/bash
+## This script is the first dependency of /workdir/genomic-data-analysis/scripts 
+## It will loop through all windowed beagle files in each LG
+## For each beagle file, it runs pcangsd first, and then runs an R script (/workdir/genomic-data-analysis/scripts/local_pca_2.R) to process the covariance matrix.  
+
 BEAGLEDIR=$1
 PREFIX=$2
 LG=$3
@@ -5,8 +10,8 @@ PC=$4
 SNP=$5
 
 for INPUT in `ls $BEAGLEDIR"local_pca/"$PREFIX"_"$LG".beagle.x"*".gz"`; do
+	## Run pcangsd
 	python /workdir/programs/pcangsd/pcangsd.py -beagle $INPUT -o $INPUT -threads 1
+	## Process pcangsd output
 	Rscript --vanilla /workdir/genomic-data-analysis/scripts/local_pca_2.R $INPUT".cov.npy" $PC $SNP $INPUT $LG $BEAGLEDIR"local_pca/"
-	# rm $BEAGLEDIR"local_pca/"$LG".cov.npy"
-	# rm $INPUT
 done
