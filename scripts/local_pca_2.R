@@ -28,10 +28,10 @@ e_vectors <- as.data.frame(e$vectors)
 pca_summary <- c(sum(c^2), e_values[1:pc], unlist(e_vectors[1:pc], use.names=FALSE)) %>%
 	matrix(nrow = 1) %>%
 	as.data.frame()
-write_tsv(pca_summary, paste0(out_dir, "pca_summary_", snp, "snp_", lg, ".tsv"), append=T, col_names=F)
+write_tsv(pca_summary, paste0(out_dir, "pca_summary_", snp, "snp_", lg, "_", pc, "pc.tsv"), append=T, col_names=F)
 
 suppressWarnings(suppressMessages(b <- read_tsv(beagle)))
 snp_position <- c(b[[1,1]], b[[dim(b)[1],1]]) %>%
 	matrix(nrow = 1) %>%
 	as.data.frame()
-write_tsv(snp_position, paste0(out_dir, "snp_position_", snp, "snp_", lg, ".tsv"), append=T, col_names=F)
+write_tsv(snp_position, paste0(out_dir, "snp_position_", snp, "snp_", lg, "_", pc, "pc.tsv"), append=T, col_names=F)
