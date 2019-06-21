@@ -9,6 +9,10 @@ LG=$3
 PC=$4
 SNP=$5
 
+## Set maximum number of threads to 1
+export OMP_NUM_THREADS=1
+
+## Loop through each windowed beagle file in the same linkage group (or chromosome)
 for INPUT in `ls $BEAGLEDIR"local_pca/"$PREFIX"_"$LG".beagle.x"*".gz"`; do
 	## Run pcangsd
 	python /workdir/programs/pcangsd/pcangsd.py -beagle $INPUT -o $INPUT -threads 1
