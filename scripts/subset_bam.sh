@@ -8,7 +8,8 @@ SUFFIX=$3 # suffix of output (e.g. mtgenome)
 for LINE in `cat $BAMLIST`; do
 	NAME=`echo "${LINE%.*}"`
 	echo $NAME
-	samtools view -h $NAME'.bam' | grep $IDENTIFIER > $NAME'_'$SUFFIX'.sam'
+	samtools view -h $NAME'.bam' | head -n 1 > $NAME'_'$SUFFIX'.sam'
+	samtools view -h $NAME'.bam' | grep $IDENTIFIER >> $NAME'_'$SUFFIX'.sam'
 	samtools view -b $NAME'_'$SUFFIX'.sam' > $NAME'_'$SUFFIX'.bam'
 	rm $NAME'_'$SUFFIX'.sam'
 done
