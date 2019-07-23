@@ -10,14 +10,16 @@ Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic
 + Maximum combined sequencing depth across all individual (MaxDepth), e.g = mean depth + 4 s.d.
 + Minimum number of individuals (MinInd) a read has to be present in, e.g. 50% of individuals
 
-The script will be run using the following command using nohup from the script directory:
-
+Run the script using the following command with nohup from the script directory:
 nohup ./angsd_global_snp_calling.sh ../bamlist.txt ../reference_genome.fasta ../pathtooutput output_basename MinDepth MaxDepth MinInd minQ > ../output_logfile.nohup &
 
 
 ## Genotype likelihood estimation
 
-[get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh)
+Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (in sites file from SNP calling script) in beagle format.
+
+Run the script using the following command with nohup from the script directory:
+nohup ./get_beagle.sh > ../output_logfile.nohup &
 
 ## Minor allele frequency estimation
 
