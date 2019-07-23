@@ -1,4 +1,4 @@
-# genomic-data-analysis
+# Population genomic analysis of low-coverage whole genome data
 Pipelines for analyzing genomic data based on genotype likelihoods or population allele frequency data derived from genotype likelihoods.
 
 ## SNP calling
@@ -17,7 +17,7 @@ nohup ./angsd_global_snp_calling.sh ../bamlist.txt ../reference_genome.fasta ../
 
 ## Genotype likelihood estimation
 
-Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (sites file from SNP calling script) in beagle format.
+Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (e.g. sites file from SNP calling script) in beagle format.
 
 Run the script using the following command with nohup from the script directory:
 
@@ -25,9 +25,16 @@ nohup ./get_beagle.sh ../bamlist.txt ../pathtobasedirectory ../reference_genome.
 
 ## Minor allele frequency estimation
 
-[get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh)
+Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh) script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:
++ sample table: Path to a sample table where the 1st column is the prefix of the raw fastq files. The 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique. The 6th column should be data type, which is either pe or se. Same as for genomic-data-processing
++ Index of the column with population information in the sample table (e.g. 5)
++ Prefix of the bamfile list containing
 
-Note on `doMajorMinor 3`
+Run the script using the following command with nohup from the script directory:
+
+nohup ./get_beagle.sh ../bamlist.txt ../pathtobasedirectory ../reference_genome.fasta ../sites.txt > ../output_logfile.nohup &
+
+Note: Important is that one uses `-doMajorMinor 3` when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies. 
 
 ## Individual-level PCA and PCoA
 
