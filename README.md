@@ -12,7 +12,7 @@ Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./angsd_global_snp_calling.sh ../bamlist.txt ../reference_genome.fasta ../pathtooutput output_basename MinDepth MaxDepth MinInd minQ > ../output_logfile.nohup &
+nohup ./angsd_global_snp_calling.sh path/bamlist.txt path/reference_genome.fasta path/pathtooutput output_basename MinDepth MaxDepth MinInd minQ > path/output_logfile.nohup &
 
 
 ## Genotype likelihood estimation
@@ -21,7 +21,7 @@ Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./get_beagle.sh ../bamlist.txt ../pathtobasedirectory ../reference_genome.fasta ../sites.txt > ../output_logfile.nohup &
+nohup ./get_beagle.sh path/bamlist.txt /pathtobasedirectory path/reference_genome.fasta path/sites.txt > path/output_logfile.nohup &
 
 ## Minor allele frequency estimation
 
@@ -32,7 +32,7 @@ Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-ana
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./get_beagle.sh ../bamlist.txt ../pathtobasedirectory ../reference_genome.fasta ../sites.txt > ../output_logfile.nohup &
+nohup ./get_beagle.sh path/bamlist.txt path/pathtobasedirectory path/reference_genome.fasta path/sites.txt > path/output_logfile.nohup &
 
 Note: Important is that one uses `-doMajorMinor 3` when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies. 
 
