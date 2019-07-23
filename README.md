@@ -1,9 +1,19 @@
 # genomic-data-analysis
-Pipelines for analyzing genomic or transcriptomic data
+Pipelines for analyzing genomic data based on genotype likelihoods or population allele frequency data derived from genotype likelihoods.
 
 ## SNP calling
+Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 and a minor allele frequency of 5% (hard coded). A range of files and parameters have to be provided:
++ A list of bamfiles with one file per line, e.g. bamlist.txt
++ Indexed reference genome
++ The minimum base quality score (minQ), e.g minQ = 20 
++ Minimum combined sequencing depth (MinDepth), e.g. 0.33 x number of individuals
++ Maximum combined sequencing depth across all individual (MaxDepth), e.g = mean depth + 4 s.d.
++ Minimum number of individuals (MinInd) a read has to be present in, e.g. 50% of individuals
 
-[angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh)
+The script will be run using the following command using nohup from the script directory:
+
+nohup ./angsd_global_snp_calling.sh ../bamlist.txt ../reference_genome.fasta ../pathtooutput output_basename MinDepth MaxDepth MinInd minQ > ../output_logfile.nohup &
+
 
 ## Genotype likelihood estimation
 
