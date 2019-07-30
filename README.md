@@ -42,17 +42,25 @@ Scripts to perform and plot principal components analyses.
 
 1. PCAngsd
 
-Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). 
-The following files and parameters have to be provided:
-+ A list of bamfiles with one file per line, e.g. bamlist.txt
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. 
+
+The following files and parameters have to be provided to run PCAngsd:
++ Path to output directory
++ Path to beagle formatted genotype likelihood file 
++ Minor allele frequency filter (integer, e.g. 0.05)
++ Type of analysis to run: for pca use 'pca' (other options: selection, inbreedSites, kinship, admix)
++ MIN. E: Minimum number of eigenvectors to use in the modelling of individual allele frequencies (relevant for admix)
++ MAX. E: Maximum number of eigenvectors to use in the modelling of individual allele frequencies (relevant for admix)
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./run_pcangsd.sh  > path/output_logfile.nohup &
+nohup ./run_pcangsd.sh /outpath/ /path/beagle.gz MINMAF pca MINE MAXE > path/output_logfile.nohup &
 
-2. angsd
+The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the 'PCA' function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the 'DAPC' function.
 
-Both methods can be plotted using [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R)
+2. PCoA
+
+The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). The analysis is performed using the 'PCoA' function as described in the R script. 
 
 ## Fst
 
