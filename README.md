@@ -43,7 +43,12 @@ Scripts to perform and plot principal components analyses.
 1. PCAngsd
 
 Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). 
-The following 
+The following files and parameters have to be provided:
++ A list of bamfiles with one file per line, e.g. bamlist.txt
+
+Run the script using the following command with nohup from the script directory:
+
+nohup ./run_pcangsd.sh  > path/output_logfile.nohup &
 
 2. angsd
 
