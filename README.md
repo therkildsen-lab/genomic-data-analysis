@@ -38,9 +38,12 @@ Note: Important is that one uses `-doMajorMinor 3` when providing a sites file t
 
 ## Individual-level PCA and PCoA
 
+Scripts to perform and plot principal components analyses.
+
 1. PCAngsd
 
-[run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh)
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). 
+The following 
 
 2. angsd
 
