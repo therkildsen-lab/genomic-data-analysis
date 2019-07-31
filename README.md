@@ -14,7 +14,7 @@ Pipelines for analyzing genomic data based on genotype likelihoods or population
 - [Individual-level PCA and PCoA](#pca)
 - [Admixture](#admix)
 - [Selection scan](#selection)
-- [conStruct](#contruct)
+- [conStruct](#construct)
 - [EEMES](#eemes)
 - [localPCA](#localpca)
 - [Notes](#notes)
