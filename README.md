@@ -103,11 +103,11 @@ pca \
 1 > path/output_logfile.nohup &
 ```
 
-The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the 'PCA' function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the 'DAPC' function.
+The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the `PCA()` function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the `DAPC()` function.
 
 2. PCoA
 
-The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). The analysis is performed using the 'PCoA' function as described in the R script. 
+The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a `.ibsMat` suffix. This distance matrix can also be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). PCoA can then be performed using the `PCoA()` function as described in the R script. 
 
 ## Fst
 
