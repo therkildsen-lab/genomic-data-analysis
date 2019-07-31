@@ -83,9 +83,7 @@ Scripts to perform and plot principal components analyses.
 
 1. PCAngsd
 
-Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. 
-
-The following files and parameters have to be provided to run PCAngsd:
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
 + Minor allele frequency filter, e.g. `0.05`
@@ -113,9 +111,7 @@ The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data
 
 1. per SNP and genome-wide average
 
-Use the [get_fst.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh) script to estimate per SNP Fst and its genome average. 
-
-The following files and parameters have to be provided to run PCAngsd:
+Use the [get_fst.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh) script to estimate per SNP Fst and its genome average. A range of files and parameters have to be provided in the following order:
 + Path to a directory where per population `saf.gz` files are located (`SAFDIR`), e.g. `/workdir/cod/greenland-cod/angsd/popminind2/`
 + Path to a tab deliminated sample table (`SAMPLETABLE`) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in [data-processing](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md). e.g. `path/sample_table.tsv`
 + Index of the column with population information in the sample table (`POPCOLUMN`), e.g. `5`
@@ -176,6 +172,34 @@ BASENAME \
 
 ## localPCA
 
+First, use the [subset_beagle_by_lg.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/subset_beagle_by_lg.sh) script to subset the beagle files by LGs or chromosomes. A range of files and parameters have to be provided in the following order:
++ Path to a genome-wide beagle file (`BEAGLE`), e.g. `/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz`
++ Path to a list of LGs or chromosomes that you want to subset by (`LGLIST`), e.g. `/workdir/cod/greenland-cod/sample_lists/lg_list.txt`
+
+Run the script using the following command with nohup from the script directory:
+
+``` bash
+nohup ./subset_beagle_by_lg.sh \
+BEAGLE \
+LGLIST \
+> path/output_logfile.nohup &
+```
+Then, use the [run_local_pca.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_local_pca.sh) script to run a localPCA analysis. A range of files and parameters have to be provided in the following order:
++ Path to a beagle.gz file that you have used for the subsetting step (`BEAGLE`), e.g. `/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz`
++ Path to a list of LGs or chromosomes that you have used for the subsetting step (`LGLIST`), e.g. `/workdir/cod/greenland-cod/sample_lists/lg_list.txt`
++ Number of SNPs to include in each window (`SNP`), e.g. 10000
++ Number of PCs to keep for each window (`PC`), e.g. 2
+
+Run the script using the following command with nohup from the script directory:
+
+``` bash
+nohup ./run_local_pca.sh \
+BEAGLE \
+LGLIST \
+SNP \
+PC \
+> path/output_logfile.nohup &
+```
 ## Notes
 
 Add potential issues, our recommended practices, link to scripts and insructions
