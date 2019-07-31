@@ -3,27 +3,27 @@ Pipelines for analyzing genomic data based on genotype likelihoods or population
 
 ## SNP calling
 Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 and a minor allele frequency of 5% (hard coded). A range of files and parameters have to be provided:
-+ A list of bamfiles with one file per line, e.g. bamlist.txt
-+ The project's base directory
-+ Indexed reference genome
-+ Minimum combined sequencing depth (minDepth), e.g. 0.33 x number of individuals
-+ Maximum combined sequencing depth across all individual (maxDepth), e.g = mean depth + 4 s.d.
-+ Minimum number of individuals (minInd) a read has to be present in, e.g. 50% of individuals
-+ The minimum base quality score (minQ), e.g minQ = 20 
-+ Minimum minor allele frequency (minMaf), e.g. 1%
++ A list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
++ Minimum combined sequencing depth (`MINDP`), e.g. 0.33 x number of individuals
++ Maximum combined sequencing depth across all individual (`MAXDP`), e.g = mean depth + 4 s.d.
++ Minimum number of individuals (`MININD`) a read has to be present in, e.g. 50% of individuals
++ The minimum base quality score (`MINQ`), e.g minQ = 20 
++ Minimum minor allele frequency (`MINMAF`), e.g. 1%
 
 Run the script using the following command with nohup from the script directory:
 
 ``` bash
 nohup ./angsd_global_snp_calling.sh \
-path/bamlist.txt \
-path/base_directory/ \
-path/reference_genome.fasta \
-minDepth \
-maxDepth \
-minInd \
-minQ \
-minMaf \
+BAMLIST \
+BASEDIR \
+REFERENCE \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+MINMAF \
 > path/output_logfile.nohup &
 ```
 
