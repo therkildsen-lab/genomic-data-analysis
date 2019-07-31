@@ -3,9 +3,9 @@ Pipelines for analyzing genomic data based on genotype likelihoods or population
 
 ## SNP calling
 Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:
-+ A list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
++ Path to a list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
-+ Indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
++ Path to the indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
 + Minimum combined sequencing depth (`MINDP`), e.g. 0.33 x number of individuals
 + Maximum combined sequencing depth across all individual (`MAXDP`), e.g = mean depth + 4 s.d.
 + Minimum number of individuals (`MININD`) a read has to be present in, e.g. 50% of individuals
@@ -48,14 +48,33 @@ SNPLIST \
 ## Minor allele frequency estimation
 
 Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh) script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:
-+ sample table: Path to a sample table where the 1st column is the prefix of the raw fastq files. The 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique. The 6th column should be data type, which is either pe or se. Same as for genomic-data-processing
-+ Index of the column with population information in the sample table (e.g. 5)
-+ Prefix of the bamfile list containing
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to a tab deliminated sample table (`SAMPLETABLE`) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in [data-processing](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md). e.g. `path/sample_table.tsv`
++ Index of the column with population information in the sample table (`POPCOLUMN`), e.g. `5`
++ Prefix in file name of the bamfile list (`BAMLISTPREFIX`), e.g. `bam_list_realigned_`
++ Path to the indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
++ Path to the SNP list (`SNPLIST`), e.g. `path/global_snp_list.txt`
++ Minimum combined sequencing depth in a population (`MINDP`)
++ Maximum combined sequencing depth across all individual in a population (`MAXDP`)
++ Minimum number of individuals a read has to be present in a population (`MININD`)
++ The minimum base quality score (`MINQ`), e.g `20`
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./get_beagle.sh path/bamlist.txt path/pathtobasedirectory path/reference_genome.fasta path/sites.txt > path/output_logfile.nohup &
-
+```bash
+nohup ./get_maf_per_pop.sh \
+BASEDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BAMLISTPREFIX \
+REFERENCE \
+SNPLIST \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+> path/output_logfile.nohup &
+```
 Note: Important is that one uses `-doMajorMinor 3` when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies. 
 
 ## Individual-level PCA and PCoA
