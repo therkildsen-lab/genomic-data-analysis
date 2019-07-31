@@ -9,8 +9,8 @@ Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic
 + Minimum combined sequencing depth (`MINDP`), e.g. 0.33 x number of individuals
 + Maximum combined sequencing depth across all individual (`MAXDP`), e.g = mean depth + 4 s.d.
 + Minimum number of individuals (`MININD`) a read has to be present in, e.g. 50% of individuals
-+ The minimum base quality score (`MINQ`), e.g minQ = 20 
-+ Minimum minor allele frequency (`MINMAF`), e.g. 1%
++ The minimum base quality score (`MINQ`), e.g. `20`
++ Minimum minor allele frequency (`MINMAF`), e.g. `0.05`
 
 Run the script using the following command with nohup from the script directory:
 
@@ -61,7 +61,7 @@ Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-ana
 
 Run the script using the following command with nohup from the script directory:
 
-```bash
+``` bash
 nohup ./get_maf_per_pop.sh \
 BASEDIR \
 SAMPLETABLE \
@@ -76,36 +76,6 @@ MINQ \
 > path/output_logfile.nohup &
 ```
 Note: Important is that one uses `-doMajorMinor 3` when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies. 
-
-## Individual-level PCA and PCoA
-
-Scripts to perform and plot principal components analyses.
-
-1. PCAngsd
-
-Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:
-+ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
-+ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
-+ Minor allele frequency filter, e.g. `0.05`
-+ Type of analysis to run: for pca use `pca` (other options: selection, inbreedSites, kinship, admix)
-
-Run the script using the following command with nohup from the script directory:
-
-``` bash
-nohup ./run_pcangsd.sh \
-BASEDIR \
-BEAGLE \
-MINMAF \
-pca \
-1 \
-1 > path/output_logfile.nohup &
-```
-
-The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the `PCA()` function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the `DAPC()` function.
-
-2. PCoA
-
-The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a `.ibsMat` suffix. This distance matrix can also be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). PCoA can then be performed using the `PCoA()` function as described in the R script. 
 
 ## Fst
 
@@ -148,15 +118,82 @@ BASENAME \
 
 ## Relatedness
 
+## Individual-level PCA and PCoA
+
+Scripts to perform and plot principal components analyses.
+
+1. PCAngsd
+
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minor allele frequency filter (`MINMAF`), e.g. `0.05`
++ Type of analysis to run: for pca use `pca` (other options: selection, inbreedSites, kinship, admix)
+
+Run the script using the following command with nohup from the script directory:
+
+``` bash
+nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+pca \
+1 \
+1 > path/output_logfile.nohup &
+```
+
+The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the `PCA()` function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the `DAPC()` function.
+
+2. PCoA
+
+The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a `.ibsMat` suffix. This distance matrix can also be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). PCoA can then be performed using the `PCoA()` function as described in the R script. 
+
 ## Admixture
 
 1. ngsAdmix
 
-[run_ngsadmix.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh)
+Use the [run_ngsadmix.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh) script to run an admixture analysis using ngsAdmix. A range of files and parameters have to be provided in the following order:
+
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minimum minor allele frequency (`MINMAF`), e.g. `0.05`
++ Minimum number of K (`MINK`), e.g. `1`
++ Maximum number of K (`MAXK`), e.g. `10`
+
+Run the script using the following command with nohup from the script directory:
+
+``` bash
+nohup ./run_ngsadmix.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+MINK \
+MAXK \
+> path/output_logfile.nohup &
+```
 
 2. PCAngsd
 
-[run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh)
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) to run an admixture analysis with PCAngsd. A range of files and parameters have to be provided in the following order:
+
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minor allele frequency filter (`MINMAF`), e.g. `0.05`
++ Type of analysis to run: for admixture use `admix` (other options: pca, selection, inbreedSites, kinship)
++ Minimum number of eigenvectors to use in the modelling of individual allele frequencies (`MINE`), e.g. `1`
++ Maximum number of eigenvectors to use in the modelling of individual allele frequencies (`MAXE`), e.g. `10`
+
+Run the script using the following command with nohup from the script directory:
+
+``` bash
+nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+admix \
+MINE \
+MAXE > path/output_logfile.nohup &
+```
 
 ## Selection scan
 
