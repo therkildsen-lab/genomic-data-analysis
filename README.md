@@ -2,7 +2,7 @@
 Pipelines for analyzing genomic data based on genotype likelihoods or population allele frequency data derived from genotype likelihoods.
 
 ## SNP calling
-Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 and a minor allele frequency of 5% (hard coded). A range of files and parameters have to be provided:
+Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:
 + A list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
@@ -29,12 +29,22 @@ MINMAF \
 
 ## Genotype likelihood estimation
 
-Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (e.g. sites file from SNP calling script) in beagle format.
+Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (e.g. sites file from SNP calling script) in beagle format. A range of files and parameters have to be provided in the following order:
++ A list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
++ Path to the SNP list (`SNPLIST`), e.g. `path/global_snp_list.txt`
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./get_beagle.sh path/bamlist.txt /pathtobasedirectory path/reference_genome.fasta path/sites.txt > path/output_logfile.nohup &
-
+``` bash
+nohup ./get_beagle.sh \
+BAMLIST \
+BASEDIR \
+REFERENCE \
+SNPLIST \
+> path/output_logfile.nohup &
+```
 ## Minor allele frequency estimation
 
 Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh) script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:
