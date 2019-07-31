@@ -1,8 +1,30 @@
 # Population genomic analysis of low-coverage whole genome data
+
 Pipelines for analyzing genomic data based on genotype likelihoods or population allele frequency data derived from genotype likelihoods.
 
+- [SNP calling](#snp)
+- [Genotype likelihood estimation](#gl)
+- [Minor allele frequency estimation](#maf)
+- [Fst](#fst)
+- [dxy](#dxy)
+- [Nucleotide diversity](#diversity)
+- [Tajima's D](#tajima)
+- [Linkage disequilibrium](#ld)
+- [Relatedness](#relatedness)
+- [Individual-level PCA and PCoA](#pca)
+- [Admixture](#admix)
+- [Selection scan](#selection)
+- [conStruct](#contruct)
+- [EEMES](#eemes)
+- [localPCA](#localpca)
+- [Notes](#notes)
+
+<a name="snp"/>
+
 ## SNP calling
+
 Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:
+
 + Path to a list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Path to the indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
@@ -27,9 +49,12 @@ MINMAF \
 > path/output_logfile.nohup &
 ```
 
+<a name="gl"/>
+
 ## Genotype likelihood estimation
 
 Use the [get_beagle.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh) script to get genotype likelihoods for distinct sites (e.g. sites file from SNP calling script) in beagle format. A range of files and parameters have to be provided in the following order:
+
 + A list of bamfiles with one file per line (`BAMLIST`), e.g. `path/bamlist.txt`
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Indexed reference genome (`REFERENCE`), e.g. `path/reference_genome.fasta`
@@ -45,9 +70,13 @@ REFERENCE \
 SNPLIST \
 > path/output_logfile.nohup &
 ```
+
+<a name="maf"/>
+
 ## Minor allele frequency estimation
 
 Use the [get_maf_per_pop.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh) script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:
+
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Path to a tab deliminated sample table (`SAMPLETABLE`) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in [data-processing](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md). e.g. `path/sample_table.tsv`
 + Index of the column with population information in the sample table (`POPCOLUMN`), e.g. `5`
@@ -77,11 +106,14 @@ MINQ \
 ```
 Note: Important is that one uses `-doMajorMinor 3` when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies. 
 
+<a name="fst"/>
+
 ## Fst
 
 1. per SNP and genome-wide average
 
 Use the [get_fst.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh) script to estimate per SNP Fst and its genome average. A range of files and parameters have to be provided in the following order:
+
 + Path to a directory where per population `saf.gz` files are located (`SAFDIR`), e.g. `/workdir/cod/greenland-cod/angsd/popminind2/`
 + Path to a tab deliminated sample table (`SAMPLETABLE`) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in [data-processing](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md). e.g. `path/sample_table.tsv`
 + Index of the column with population information in the sample table (`POPCOLUMN`), e.g. `5`
@@ -100,15 +132,23 @@ BASENAME \
 
 2. windowed
 
+<a name="dxy"/>
+
 ## dxy
 
 1. ngsTools
 
 2. David Marques's script
 
+<a name="diversity"/>
+
 ## Nucleotide diversity
 
+<a name="tajima"/>
+
 ## Tajima's D
+
+<a name="ld"/>
 
 ## Linkage disequilibrium
 
@@ -116,15 +156,20 @@ BASENAME \
 
 [run_ngsLD.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsLD.sh)
 
+<a name="relatedness"/>
+
 ## Relatedness
+
+<a name="pca"/>
 
 ## Individual-level PCA and PCoA
 
-Scripts to perform and plot principal components analyses.
+Scripts to perform and plot principal components analyses (based on a covariance matrix) and principal coordinate analyses (based on a distance matrix).
 
 1. PCAngsd
 
 Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:
+
 + The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
 + Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
 + Minor allele frequency filter (`MINMAF`), e.g. `0.05`
@@ -147,6 +192,9 @@ The covariance matrix can be used as input for the [individual_pca_functions.R](
 2. PCoA
 
 The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a `.ibsMat` suffix. This distance matrix can also be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). PCoA can then be performed using the `PCoA()` function as described in the R script. 
+
+
+<a name="admix"/>
 
 ## Admixture
 
@@ -195,6 +243,8 @@ MINE \
 MAXE > path/output_logfile.nohup &
 ```
 
+<a name="selection"/>
+
 ## Selection scan
 
 1. PCAngsd
@@ -222,9 +272,15 @@ This script will performs a genome selection scan along all significant PCs. If 
 
 2. outflank
 
+<a name="construct"/>
+
 ## conStruct
 
+<a name="eemes"/>
+
 ## EEMES
+
+<a name="localpca"/>
 
 ## localPCA
 
@@ -256,6 +312,9 @@ SNP \
 PC \
 > path/output_logfile.nohup &
 ```
+
+<a name="notes"/>
+
 ## Notes
 
 Add potential issues, our recommended practices, link to scripts and insructions
