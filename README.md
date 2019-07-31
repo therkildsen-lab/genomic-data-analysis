@@ -86,16 +86,22 @@ Scripts to perform and plot principal components analyses.
 Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. 
 
 The following files and parameters have to be provided to run PCAngsd:
-+ Path to output directory
-+ Path to beagle formatted genotype likelihood file 
-+ Minor allele frequency filter (integer, e.g. 0.05)
-+ Type of analysis to run: for pca use 'pca' (other options: selection, inbreedSites, kinship, admix)
-+ MIN. E: Minimum number of eigenvectors to use in the modelling of individual allele frequencies (relevant for admix)
-+ MAX. E: Maximum number of eigenvectors to use in the modelling of individual allele frequencies (relevant for admix)
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minor allele frequency filter, e.g. `0.05`
++ Type of analysis to run: for pca use `pca` (other options: selection, inbreedSites, kinship, admix)
 
 Run the script using the following command with nohup from the script directory:
 
-nohup ./run_pcangsd.sh /outpath/ /path/beagle.gz MINMAF pca MINE MAXE > path/output_logfile.nohup &
+``` bash
+nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+pca \
+1 \
+1 > path/output_logfile.nohup &
+```
 
 The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the 'PCA' function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the 'DAPC' function.
 
