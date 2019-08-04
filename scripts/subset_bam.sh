@@ -9,8 +9,9 @@ for LINE in `cat $BAMLIST`; do
 	NAME=`echo "${LINE%.*}"`
 	echo $NAME
 	samtools view -h $NAME'.bam' | head -n 1 > $NAME'_'$SUFFIX'.sam'
-	samtools view -h $NAME'.bam' | grep $IDENTIFIER >> $NAME'_'$SUFFIX'.sam'
+	samtools view -h $NAME'.bam' | grep $IDENTIFIER > $NAME'_'$SUFFIX'.sam'
 	samtools view -b $NAME'_'$SUFFIX'.sam' > $NAME'_'$SUFFIX'.bam'
 	rm $NAME'_'$SUFFIX'.sam'
-	samtools index $NAME'_'$SUFFIX'.bam'
+	samtools sort $NAME'_'$SUFFIX'.bam' > $NAME'_'$SUFFIX'_sorted.bam'
+	samtools index $NAME'_'$SUFFIX'_sorted.bam'
 done
