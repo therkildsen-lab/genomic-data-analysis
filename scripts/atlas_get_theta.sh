@@ -7,11 +7,7 @@ for LINE in `cat $BAMLIST`; do
 	NAME=`echo "${LINE%.*}"`
 	echo $NAME
 	if [ ! -f $NAME'.bam.bai' ]; then
-		if [ -f $NAME'.bai' ]; then
-			cp $NAME'.bai' $NAME'.bam.bai'
-		else
-			samtools index $NAME'.bam'
-		fi
+		samtools index $NAME'.bam'
 	fi
 	atlas \
 	task=estimateTheta \
