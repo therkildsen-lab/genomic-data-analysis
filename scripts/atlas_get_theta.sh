@@ -6,6 +6,13 @@ BAMLIST=$1 # Path to textfile listing bamfiles to estimate theta from (e.g. /wor
 for LINE in `cat $BAMLIST`; do
 	NAME=`echo "${LINE%.*}"`
 	echo $NAME
+	if [ ! -f $NAME'.bam.bai' ]; then
+		if [ -f $NAME'.bai' ]; then
+			cp $NAME'.bai' $NAME'.bam.bai'
+		else
+			samtools index $NAME'.bam'
+		fi
+	fi
 	atlas \
 	task=estimateTheta \
 	bam=$NAME'.bam' \
