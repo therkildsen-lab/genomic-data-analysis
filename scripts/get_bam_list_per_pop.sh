@@ -7,7 +7,7 @@ POPCOLUMN=$3 # The column index of the variable that you want to group by in the
 BAMLIST=$4 # The full bam list that you want to subset from. An example from the Greenland cod project is /workdir/cod/greenland-cod/sample_lists/bam_list_realigned.tsv 
 OUTNAME=$5 # Prefix of the output bam lists. An example from the Greenland cod project is bam_list_realigned_
 
-if [ ! -d $BASEDIR'sample_lists/bam_list_per_pop/']; then
+if [ ! -d $BASEDIR'sample_lists/bam_list_per_pop/' ]; then
 	mkdir $BASEDIR'sample_lists/bam_list_per_pop/'
 fi
 
