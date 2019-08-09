@@ -9,8 +9,10 @@ for LINE in `cat $BAMLIST`; do
 	if [ ! -f $NAME'.bam.bai' ]; then
 		samtools index $NAME'.bam'
 	fi
-	atlas \
-	task=estimateTheta \
-	bam=$NAME'.bam' \
-	minDepth=2
+	if [ ! -f $NAME'_theta_estimates.txt.gz' ]; then
+			atlas \
+			task=estimateTheta \
+			bam=$NAME'.bam' \
+			minDepth=2
+	fi
 done
