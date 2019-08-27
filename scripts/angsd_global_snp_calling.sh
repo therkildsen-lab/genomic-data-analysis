@@ -17,11 +17,11 @@ BAMLISTNAME=`echo $BAMLIST | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'`
 OUTBASE=$BAMLISTNAME'_mindp'$MINDP'_maxdp'$MAXDP'_minind'$MININD'_minq'$MINQ
 
 ## Call SNPs
-/workdir/programs/angsd0.928/angsd/angsd -b $BAMLIST -anc $REFERENCE -out $BASEDIR'angsd/'$OUTBASE -dosaf 1 -GL 1 -doGlf 3 -doMaf 1 -doMajorMinor 1 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 -P 32 -SNP_pval 1e-6 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMaf $MINMAF >& $BASEDIR'nohups/'$OUTBASE'.log' # when I added -dogeno 8 and changed doGlf 3 to 2, the nInd output stops working
+/workdir/programs/angsd0.931/angsd/angsd -b $BAMLIST -anc $REFERENCE -out $BASEDIR'angsd/'$OUTBASE -dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 -P 32 -SNP_pval 1e-6 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMaf $MINMAF >& $BASEDIR'nohups/'$OUTBASE'.log' 
 
 ## Create a SNP list to use in downstream analyses 
 gunzip -c $BASEDIR'angsd/'$OUTBASE'.mafs.gz' | cut -f 1,2,3,4 | tail -n +2 > $BASEDIR'angsd/global_snp_list_'$OUTBASE'.txt'
-/workdir/programs/angsd0.928/angsd/angsd sites index $BASEDIR'angsd/global_snp_list_'$OUTBASE'.txt'
+/workdir/programs/angsd0.931/angsd/angsd sites index $BASEDIR'angsd/global_snp_list_'$OUTBASE'.txt'
 
 ## Also make it in regions format for downstream analyses
 cut -f 1,2 $BASEDIR'angsd/global_snp_list_'$OUTBASE'.txt' | sed 's/\t/:/g' > $BASEDIR'angsd/global_snp_list_'$OUTBASE'.regions'
