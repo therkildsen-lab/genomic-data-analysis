@@ -1,3 +1,4 @@
+## This file is used to store custom R functions used in mtgenome analysis (with low coverage whole genome data)
 
 get_concensus_per_base <- function(count_per_ind_per_base, min_depth, min_maf){
   ## This function is used to get concensus allele for each base; it is imbedded in the convert_count_to_concensus() function
