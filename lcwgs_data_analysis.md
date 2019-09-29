@@ -14,7 +14,7 @@ Pipelines for analyzing genomic data based on genotype likelihoods or population
 - [Admixture](#admix)
 - [Selection scan](#selection)
 - [conStruct](#construct)
-- [EEMES](#eemes)
+- [EEMS](#eems)
 - [localPCA](#localpca)
 - [Notes](#notes)
 
@@ -274,7 +274,7 @@ This script will performs a genome selection scan along all significant PCs. If 
 
 ## conStruct
 
-<a name="eemes"/>
+<a name="eems"/>
 
 ## EEMS
 
@@ -316,6 +316,44 @@ EEMS can be run using the [run_eems_fst.sh]() script with the specified paramete
 nohup sh run_eems_fst.sh \
 /path/parameterfile.ini \
 > /path/logfiles/nohup.log &
+```
+
+The EEMS results can be plotted using the rEEMSplots R-package. 
+
+Commands for installing the rEEMSplots R-package and dependencies:
+```{r}
+install.packages(c("Rcpp","RcppEigen","raster","rgeos","sp","rgdal","rworldmap","rworldxra"))
+
+if (file.exists("./rEEMSplots/")) {
+  install.packages("rEEMSplots", repos = NULL, type = "source")
+} else {
+  stop("Move to the directory that contains the rEEMSplots source to install the package.")
+}
+```
+
+There are many different options for modifying the resulting plots. The following code shows how to plot the results including a map of the study area, grid and migration rate estimates. The package also automatically plots other diagnostic plots. More details can be found on the EEMS github page.
+
+```{r}
+library(rEEMSplots)
+library("rgdal")
+library("rworldmap")
+library("rworldxra")
+
+mcmcpath = "/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems"
+plotpath = "/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems"
+
+projection_none <- "+proj=longlat +datum=WGS84"
+projection_mercator <- "+proj=merc +datum=WGS84"
+
+eems.plots(mcmcpath, plotpath, longlat = TRUE
+           ,out.png=FALSE, add.grid = TRUE
+           ,col.grid = "gray90",
+           ,add.demes = TRUE, remove.singletons = FALSE
+           ,projection.in = projection_none
+           ,projection.out = projection_mercator
+           ,add.map = TRUE, 
+           ,col.map = "black"
+           ,lwd.map = 1)
 ```
 
 <a name="localpca"/>
