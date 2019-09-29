@@ -8,7 +8,6 @@ Pipelines for analyzing genomic data based on genotype likelihoods or population
 - [Fst](#fst)
 - [dxy](#dxy)
 - [Nucleotide diversity](#diversity)
-- [Tajima's D](#tajima)
 - [Linkage disequilibrium](#ld)
 - [Relatedness](#relatedness)
 - [Individual-level PCA and PCoA](#pca)
@@ -142,11 +141,10 @@ BASENAME \
 
 <a name="diversity"/>
 
-## Nucleotide diversity
+## Nucleotide diversity and Tajima's D
 
-<a name="tajima"/>
+Scripts to estimate the .saf file based on all sites that pass the filters (script1), which is further used to estimate nucleotide diversity and Tajima's D (and other thetas) in defined windows (script2). 
 
-## Tajima's D
 
 <a name="ld"/>
 
@@ -278,7 +276,47 @@ This script will performs a genome selection scan along all significant PCs. If 
 
 <a name="eemes"/>
 
-## EEMES
+## EEMS
+
+Estimating Effective Migration Surfaces. These scripts are for the use of a modifief version that works with a pairwise Fst matrix rather than individual pairwise genetic dissimilarity estimates. See [EEMS github page](https://github.com/dipetkov/eems) for details. 
+
+Required input files:
+
+1. datapath.diffs: Symmetric Fst matrix with zeros on the diagonal.
+2. datapath.coord: the sample coordinates (longitude and latitude coordinates per sample (tab separated), one sample per line)
+3. datapath.outer: the habitat coordinates (as a sequence of vertices that outline a closed polygon)
+
+Habitat outline can be created manually as a “polyline” on this [site](http://www.birdtheme.org/useful/v3tool.html). The habitat vertices should be listed counterclockwise and form a closed polygon. 
+
+Furthermore, a parameter file (e.g. params-simno1.ini) has to be created that provides paths to the input files and additional parameters. The file should look like this:
+
+```
+datapath = ./workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+mcmcpath = /workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+nIndiv = 11
+nSites = 4696248 
+nDemes = 1000
+diploid = true
+numMCMCIter = 2000000
+numBurnIter = 1000000
+numThinIter = 9999
+```
+This file specifies the required arguments: 
+the path to the input data (datapath)
+the path to the output data (mcmcpath)
+the number of samples (nIndiv)
+the number of markers (nSites)
+the density of the population grid (nDemes)
+is the species diploid or haploid (diploid)
+the number of MCMC and burn-in iterations (numMCMCIter, numBurnIter)
+and the thinning interval (numThinIter).
+
+EEMS can be run using the [run_eems_fst.sh]() script with the specified parameter file
+```{bash}
+nohup sh run_eems_fst.sh \
+/path/parameterfile.ini \
+> /path/logfiles/nohup.log &
+```
 
 <a name="localpca"/>
 
