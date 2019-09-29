@@ -311,7 +311,7 @@ is the species diploid or haploid (diploid)
 the number of MCMC and burn-in iterations (numMCMCIter, numBurnIter)
 and the thinning interval (numThinIter).
 
-EEMS can be run using the [run_eems_fst.sh]() script with the specified parameter file
+EEMS can be run using the [run_eems_fst.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_eems_fst.sh) script with the specified parameter file
 ```{bash}
 nohup sh run_eems_fst.sh \
 /path/parameterfile.ini \
