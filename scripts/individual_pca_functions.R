@@ -157,6 +157,7 @@ PCA <- function(cov_matrix, ind_label, pop_label, x_axis, y_axis, show.point=T, 
   PCA_plot<-ggplot(data=e[,],aes(x=e[,x_axis+2], y=e[,y_axis+2], color=population,label=population, shape=population)) + 
     geom_enterotype(alpha=alpha, show.point=show.point, show.label=show.label, show.ellipse=show.ellipse, show.line=show.line) +
     scale_shape_manual(values = c(rep(c(15,16,17,18),7), 15, 16)) +
+    theme_cowplot() +
     theme(
       axis.text.x = element_blank(),
       axis.text.y = element_blank()
@@ -186,6 +187,7 @@ DAPC <- function (n=50, x_axis, y_axis, show.point=T, show.label=T, show.ellipse
   DAPC_plot<- ggplot(dataset, aes(dataset[,1+x_axis], dataset[,1+y_axis], color= group, label=group, shape=group)) + 
     geom_enterotype(show.point=show.point, show.label=show.label, show.ellipse=show.ellipse, show.line=show.line, alpha=alpha) +
     scale_shape_manual(values = c(rep(c(15,16,17,18),7), 15, 16)) +
+    theme_cowplot() +
     labs(x = paste0("LD", x_axis," (", percent(prop.lda[x_axis]), ")", sep=""),
          y = paste0("LD", y_axis, " (", percent(prop.lda[y_axis]), ")", sep=""))
   print(DAPC_plot)
@@ -225,11 +227,12 @@ PCoA <- function(dist_matrix, ind_label, pop_label, k, x_axis, y_axis, show.poin
   PCoA_plot<-ggplot(data=mds[,], aes(x=mds[,x_axis+2], y=mds[,y_axis+2], color=population,label=population, shape=population)) + 
     geom_enterotype(alpha=alpha, show.point=show.point, show.label=show.label, show.ellipse=show.ellipse, show.line=show.line) +
     scale_shape_manual(values = c(rep(c(15,16,17,18),7), 15, 16)) +
+    theme_cowplot() +
     theme(
       axis.text.x = element_blank(),
       axis.text.y = element_blank()
     ) +
     xlab(paste0("PCo", x_axis, "(",var_explained[x_axis],"%)")) +
-    ylab(paste0("PCo", y_axis ,"(",var_explained[y_axis],"%)")) 
+    ylab(paste0("PCo", y_axis ,"(",var_explained[y_axis],"%)"))
   print(PCoA_plot)
 }
