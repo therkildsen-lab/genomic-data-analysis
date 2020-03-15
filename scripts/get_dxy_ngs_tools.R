@@ -25,17 +25,28 @@
 #   This filter may give an underestimate of dxy.
 # * Per site Dxy of ~0 could be common if the alternate alleles are present in a population other than the two being included in the calculation.
 
+# ADDITIONAL NOTES BY NICOLAS LOU
+# * This script was slightly modified to allow for:
+#   1. gzipped mafs file
+#   2. specifying input and output directory
+#   3. specifying output name
 
 ### Creating an argument parser
-library("optparse")
+library(optparse)
+library(tidyverse)
 
 option_list = list(
+  make_option(c("-d","--dir"), type="character",default=NULL,help="path to input and output files",metavar="character"),
   make_option(c("-p","--popA"), type="character",default=NULL,help="path to unzipped mafs file for pop 1",metavar="character"),
   make_option(c("-q","--popB"), type="character",default=NULL,help="path to unzipped mafs file for pop 2",metavar="character"),
-  make_option(c("-t","--totLen"), type="numeric",default=NULL,help="total sequence length for global per site Dxy estimate [optional]",metavar="numeric")
+  make_option(c("-t","--totLen"), type="numeric",default=NULL,help="total sequence length for global per site Dxy estimate [optional]",metavar="numeric"),
+  make_option(c("-o","--out_name"), type="character",default=NULL,help="output file name",metavar="character")
 )
 opt_parser = OptionParser(option_list=option_list)
 opt = parse_args(opt_parser)
+
+### Set working directory
+setwd(opt$dir)
 
 ### Troubleshooting input
 if(is.null(opt$popA) | is.null(opt$popB)){
@@ -43,25 +54,20 @@ if(is.null(opt$popA) | is.null(opt$popB)){
   stop("One or more of the mafs paths are missing", call.=FALSE)
 }
 
-if(grepl('.gz$',opt$popA) | grepl('.gz$',opt$popB)){
-  print_help(opt_parser)
-  stop("One or more of the mafs is gzipped.", call.=FALSE)
-}
-
 if(is.null(opt$totLen)){
   print("Total length not supplied. The output will not be a per site estimate.")
 }
 
 ### Reading data in
-allfreqA <- read.table(opt$popA,sep='\t',row.names=NULL, header=T)
-allfreqB <- read.table(opt$popB,sep='\t',row.names=NULL, header=T)
+allfreqA <- read_tsv(opt$popA)
+allfreqB <- read_tsv(opt$popB)
 
 ### Manipulating the table and print dxy table
 allfreq <- merge(allfreqA, allfreqB, by=c("chromo","position"))
 allfreq <- allfreq[order(allfreq$chromo, allfreq$position),]
 # -> Actual dxy calculation
 allfreq <- transform(allfreq, dxy=(knownEM.x*(1-knownEM.y))+(knownEM.y*(1-knownEM.x)))
-write.table(allfreq[,c("chromo","position","dxy")], file="Dxy_persite.txt",quote=FALSE, row.names=FALSE, sep='\t')
+write.table(allfreq[,c("chromo","position","dxy")], file=opt$out_name, quote=FALSE, row.names=FALSE, sep='\t')
 print('Created Dxy_persite.txt')
 
 ### Print global dxy
