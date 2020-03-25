@@ -13,7 +13,7 @@ MINQ=$9 # Minimum quality filter
 WINDOW_SIZE=${10} # Window size when estimating theta in sliding windows
 STEP_SIZE=${11} # Step size when estimating theta in sliding windows
 
-OUTBASE=$BAMLISTPREFIX'_popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ
+OUTBASE=$BAMLISTPREFIX'popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ
 OUTDIR=$BASEDIR'angsd/popminind'$MININD'/'
 if [ ! -d "$OUTDIR" ]; then
 	mkdir $OUTDIR
@@ -27,6 +27,7 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
     -anc $REFERENCE \
     -out $OUTDIR$POP'_'$OUTBASE \
     -doSaf 1 \
+    -doCounts 1 \
     -GL 1 \
     -P 8 \
     -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ
