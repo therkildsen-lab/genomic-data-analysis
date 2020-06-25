@@ -57,5 +57,15 @@ for LINE in `cat $BAMLIST`; do
     -setMaxDepth $MAXDP \
     -minQ $MINQ \
     -minmapq $MINMAPQ 
+    
+    ## Print per site thetas
+    /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
+    $OUTDIR$OUTBASE'.thetas.idx' \
+    > $OUTDIR$OUTBASE'.thetas.tsv'
+
+    ## Print average thetas
+    /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
+    $OUTDIR$OUTBASE'.thetas.idx' \
+    > $OUTDIR$OUTBASE'.average_thetas.tsv'
 
 done
