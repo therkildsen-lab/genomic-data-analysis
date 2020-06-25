@@ -66,6 +66,6 @@ for LINE in `cat $BAMLIST`; do
     ## Print average thetas
     /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
     $OUTDIR$OUTBASE'.thetas.idx' \
-    > $OUTDIR$OUTBASE'.average_thetas.tsv'
+    -outnames $OUTDIR$OUTBASE'.average_thetas.tsv'
 
 done
