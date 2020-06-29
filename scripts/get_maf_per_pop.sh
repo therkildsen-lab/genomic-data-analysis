@@ -12,7 +12,7 @@ MAXDP=$8 # Maximum depth filter
 MININD=$9 # Minimum individual filter
 MINQ=${10} # Minimum quality filter
 
-OUTBASE=`echo $SNPLIST | sed 's/\..*//' | sed -e 's#.*snp_list_\(\)#\1#'`
+OUTBASE=`echo $SNPLIST | sed 's/\..*//' | sed -e 's#.*\/\(\)#\1#'`
 CHRLIST=`echo $SNPLIST | sed 's/\..*//'`.chrs
 OUTDIR=$BASEDIR'angsd/popminind'$MININD'/'
 if [ ! -d "$OUTDIR" ]; then
@@ -28,5 +28,5 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 	-dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 \
 	-P 16 \
 	-setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -sites $SNPLIST -rf $CHRLIST \
-	>& $BASEDIR'nohups/'$POP'_'$OUTBASE'_maf.log'
+	>& $BASEDIR'nohups/'$POP'_'$OUTBASE'_popminind'$MININD'_maf.log'
 done
