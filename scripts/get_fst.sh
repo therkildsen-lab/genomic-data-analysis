@@ -20,7 +20,7 @@ for POP1 in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 				# Check if Fst output already exists
 				if [ ! -f $POP1'_'$POP2$BASENAME'.fst' ]; then
 					# Generate the 2dSFS to be used as a prior for Fst estimation (and individual plots)				
-					/workdir/programs/angsd0.928/angsd/misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' > $POP1'_'$POP2$BASENAME'.2dSFS'
+					/workdir/programs/angsd0.928/angsd/misc/realSFS $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' -P 8 > $POP1'_'$POP2$BASENAME'.2dSFS'
 					# Estimating Fst in angsd
 					/workdir/programs/angsd0.928/angsd/misc/realSFS fst index  $POP1$BASENAME'.saf.idx' $POP2$BASENAME'.saf.idx' -sfs $POP1'_'$POP2$BASENAME'.2dSFS' -fstout $POP1'_'$POP2$BASENAME'.alpha_beta'
 					/workdir/programs/angsd0.928/angsd/misc/realSFS fst print $POP1'_'$POP2$BASENAME'.alpha_beta.fst.idx' > $POP1'_'$POP2$BASENAME'.alpha_beta.txt'
