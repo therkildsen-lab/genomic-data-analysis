@@ -10,19 +10,21 @@ MINDP=$6 # Minimum depth filter
 MAXDP=$7 # Maximum depth filter
 MININD=$8 # Minimum individual filter
 MINQ=$9 # Minimum quality filter
-WINDOW_SIZE=${10} # Window size when estimating theta in sliding windows
-STEP_SIZE=${11} # Step size when estimating theta in sliding windows
+MINMAPQ=${10} # Minimum mapping quality filter
+WINDOW_SIZE=${11} # Window size when estimating theta in sliding windows
+STEP_SIZE=${12} # Step size when estimating theta in sliding windows
 
-OUTBASE=$BAMLISTPREFIX'popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ
+OUTBASE=$BAMLISTPREFIX'popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ'_minmapq'$MINMAPQ
 OUTDIR=$BASEDIR'angsd/popminind'$MININD'/'
+
 if [ ! -d "$OUTDIR" ]; then
-	mkdir $OUTDIR
+    mkdir $OUTDIR
 fi
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
-	echo $POP
-	## Get saf file
-	/workdir/programs/angsd0.931/angsd/angsd \
+    echo $POP
+    ## Get saf file
+    /workdir/programs/angsd0.931/angsd/angsd \
     -b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' \
     -anc $REFERENCE \
     -out $OUTDIR$POP'_'$OUTBASE \
@@ -30,7 +32,7 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
     -doCounts 1 \
     -GL 1 \
     -P 8 \
-    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ
+    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ
     
     ## Get SFS from saf
     /workdir/programs/angsd0.931/angsd/misc/realSFS \
@@ -47,7 +49,9 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
     -pest $OUTDIR$POP'_'$OUTBASE'.sfs' \
     -anc $REFERENCE \
     -GL 1 \
-    -P 8
+    -P 8 \
+    -doCounts 1 \
+    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ
     
     ## Print per-SNP theta
     /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
