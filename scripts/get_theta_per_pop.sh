@@ -55,8 +55,9 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
     
     ## Print per-SNP theta
     /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
-    $OUTDIR$POP'_'$OUTBASE'.thetas.idx' \
-    > $OUTDIR$POP'_'$OUTBASE'.thetas.tsv'
+    $OUTDIR$POP'_'$OUTBASE'.thetas.idx' | \
+    gzip \
+    > $OUTDIR$POP'_'$OUTBASE'.thetas.tsv.gz'
     
     ## Calculate fixed window theta
     /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \

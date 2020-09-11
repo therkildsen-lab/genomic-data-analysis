@@ -60,8 +60,9 @@ for LINE in `cat $BAMLIST`; do
     
     ## Print per site thetas
     /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
-    $OUTDIR$OUTBASE'.thetas.idx' \
-    > $OUTDIR$OUTBASE'.thetas.tsv'
+    $OUTDIR$OUTBASE'.thetas.idx' | \
+    gzip \
+    > $OUTDIR$OUTBASE'.thetas.tsv.gz'
 
     ## Print average thetas
     /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
