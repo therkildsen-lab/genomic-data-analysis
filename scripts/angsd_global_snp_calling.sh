@@ -9,6 +9,7 @@ MAXDP=$5 # Maximum depth filter
 MININD=$6 # Minimum individual filter
 MINQ=$7 # Minimum quality filter
 MINMAF=$8 #Minimum minor allele frequency filter
+MINMAPQ=${9:-20} #Minimum mapping quality (alignment score) filter, default value is 20
 
 ## Extract the name of the bam list (excluding path and suffix)
 BAMLISTNAME=`echo $BAMLIST | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
@@ -17,7 +18,7 @@ BAMLISTNAME=`echo $BAMLIST | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'`
 OUTBASE=$BAMLISTNAME'_mindp'$MINDP'_maxdp'$MAXDP'_minind'$MININD'_minq'$MINQ
 
 ## Call SNPs
-/workdir/programs/angsd0.931/angsd/angsd -b $BAMLIST -anc $REFERENCE -out $BASEDIR'angsd/'$OUTBASE -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 -P 32 -SNP_pval 1e-6 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMaf $MINMAF >& $BASEDIR'nohups/'$OUTBASE'.log' 
+/workdir/programs/angsd0.931/angsd/angsd -b $BAMLIST -anc $REFERENCE -out $BASEDIR'angsd/'$OUTBASE -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 -P 32 -SNP_pval 1e-6 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMaf $MINMAF -minMapQ $MINMAPQ >& $BASEDIR'nohups/'$OUTBASE'.log' 
 
 ## Create a SNP list to use in downstream analyses 
 gunzip -c $BASEDIR'angsd/'$OUTBASE'.mafs.gz' | cut -f 1,2,3,4 | tail -n +2 > $BASEDIR'angsd/global_snp_list_'$OUTBASE'.txt'
