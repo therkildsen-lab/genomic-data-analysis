@@ -11,6 +11,7 @@ MINDP=$7 # Minimum depth filter
 MAXDP=$8 # Maximum depth filter
 MININD=$9 # Minimum individual filter
 MINQ=${10} # Minimum quality filter
+MINMAPQ=${11:-20} #Minimum mapping quality (alignment score) filter, default value is 20
 
 OUTBASE=`echo $SNPLIST | sed 's/\..*//' | sed -e 's#.*\/\(\)#\1#'`
 CHRLIST=`echo $SNPLIST | sed 's/\..*//'`.chrs
@@ -27,6 +28,6 @@ for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do
 	-out $OUTDIR$POP'_'$OUTBASE'_popminind'$MININD \
 	-dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 \
 	-P 16 \
-	-setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -sites $SNPLIST -rf $CHRLIST \
+	-setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ -sites $SNPLIST -rf $CHRLIST \
 	>& $BASEDIR'nohups/'$POP'_'$OUTBASE'_popminind'$MININD'_maf.log'
 done
