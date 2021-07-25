@@ -11,12 +11,12 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>SNP calling with ANGSD</title>
 
 <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -326,10 +326,10 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li class="dropdown-header">lcWGS pipeline</li>
     <li>
-      <a href="markdowns/lcwgs_data_analysis.html">Overview</a>
+      <a href="lcwgs_data_analysis.html">Overview</a>
     </li>
     <li>
-      <a href="markdowns/angsd_global_snp_calling.html">SNP calling</a>
+      <a href="angsd_global_snp_calling.html">SNP calling</a>
     </li>
   </ul>
 </li>
@@ -345,12 +345,64 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">SNP calling with ANGSD</h1>
 
 </div>
 
 
-<p>This website contains data analysis pipelines developed and maintained the Therkildsen lab at Cornell University.</p>
+<p><br></p>
+<div id="script" class="section level2">
+<h2>Script</h2>
+<p>Run the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh">angsd_global_snp_calling.sh</a> script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>Path to a list of bamfiles with one file per line (<code>BAMLIST</code>), e.g. <code>path/bamlist.txt</code></li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to the indexed reference genome (<code>REFERENCE</code>), e.g. <code>path/reference_genome.fasta</code></li>
+<li>Minimum combined sequencing depth (<code>MINDP</code>), e.g. 0.33 x number of individuals</li>
+<li>Maximum combined sequencing depth across all individual (<code>MAXDP</code>), e.g = mean depth + 4 s.d.</li>
+<li>Minimum number of individuals (<code>MININD</code>) a read has to be present in, e.g. 50% of individuals</li>
+<li>The minimum base quality score (<code>MINQ</code>), e.g. <code>20</code></li>
+<li>Minimum minor allele frequency (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./angsd_global_snp_calling.sh \
+BAMLIST \
+BASEDIR \
+REFERENCE \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+MINMAF \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p><br></p>
+</div>
+<div id="output" class="section level2">
+<h2>Output</h2>
+<p>The output of this SNP calling step are stored in the <code>angsd</code> directory within the project directory, and they include the followings:</p>
+<ul>
+<li>A <code>txt</code> file containing a list of SNPs identified in the data and its associated index files.
+<ul>
+<li>These can be used later to restrict certain analyses on this set of SNPs.</li>
+</ul></li>
+<li>A <code>pos.gz</code> file containing the position of total sequencing depth at these SNPs.</li>
+<li>A <code>mafs.gz</code> file containing the estimated allele frequencies at these SNPs.</li>
+<li>A <code>beagle.gz</code> file containing the genotype likelihoods of each individual at these SNPs in beagle format.
+<ul>
+<li>This can be used later as input for other downstream analysis tools, such as ngsLD, PCAngsd, and etc.</li>
+</ul></li>
+<li>A <code>depthGlobal</code> and a<code>depthSample</code> file that contain the sequencing depth distribution for each SNP, for all samples combined and for each sample separately.</li>
+<li>A <code>ibsMat</code> file that contains a distance matrix for all samples generated using the random read sampling method.</li>
+<li>A <code>covMat</code> file that contains a covariance matrix for all samples generated using the random read sampling method.</li>
+</ul>
+<p><br></p>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<ul>
+<li>We recommend that relaxed filters could be used in this initial SNP calling step, since the SNP list can be further subsetted downstream.</li>
+</ul>
+</div>
 
 
 

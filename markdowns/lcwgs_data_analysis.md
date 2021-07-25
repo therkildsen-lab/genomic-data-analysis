@@ -13,7 +13,7 @@ This collection of scripts cover the data analysis part of the low-coverage whol
 
 We aim to generate a pipeline that is user-friendly and highly flexible (e.g. it should be compatible to most study organisms, sequencing configuration, and computing server structure). However, this is still a work in progress. Please submit a GitHub issue if you encounter any problems, and we will try to get back to you in a timely fashion. 
 
-<img src="../misc/fig2_lcwgs_guide.png" width="4442" />
+![](../misc/fig2_lcwgs_guide.png)<!-- -->
 
 
 ## Before you start

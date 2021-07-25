@@ -11,12 +11,12 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Population genomic analysis of low-coverage whole genome data</title>
 
 <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -326,10 +326,10 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li class="dropdown-header">lcWGS pipeline</li>
     <li>
-      <a href="markdowns/lcwgs_data_analysis.html">Overview</a>
+      <a href="lcwgs_data_analysis.html">Overview</a>
     </li>
     <li>
-      <a href="markdowns/angsd_global_snp_calling.html">SNP calling</a>
+      <a href="angsd_global_snp_calling.html">SNP calling</a>
     </li>
   </ul>
 </li>
@@ -345,12 +345,29 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Population genomic analysis of low-coverage whole genome data</h1>
 
 </div>
 
 
-<p>This website contains data analysis pipelines developed and maintained the Therkildsen lab at Cornell University.</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>This collection of scripts cover the data analysis part of the low-coverage whole genome sequencing pipeline (i.e. bottom part of the following diagram), going from quality checked bam files to various population genomic inference. It is primarily ANGSD-based, but will also incorporate other downstream analysis software programs that can take ANGSD files at input.</p>
+<p>We aim to generate a pipeline that is user-friendly and highly flexible (e.g. it should be compatible to most study organisms, sequencing configuration, and computing server structure). However, this is still a work in progress. Please submit a GitHub issue if you encounter any problems, and we will try to get back to you in a timely fashion.</p>
+<p><img src="../misc/fig2_lcwgs_guide.png" /><!-- --></p>
+</div>
+<div id="before-you-start" class="section level2">
+<h2>Before you start</h2>
+<p>We recommend you to have a project base directory that contains the following subdirectories:</p>
+<ul>
+<li><p><code>bam</code> bam files</p></li>
+<li><p><code>nohups</code> nohup log files</p></li>
+<li><p><code>sample_lists</code> small text files, such as lists of bam files</p></li>
+<li><p><code>markdowns</code> markdown files tracking the workflow; it is recommended that you first create Rmd files using Rstudio, and knit these into GitHub markdown format</p></li>
+<li><p><code>angsd</code> angsd output files</p></li>
+<li><p><code>scripts</code> scripts specific to your projects (e.g. merging certain bam files)</p></li>
+</ul>
+</div>
 
 
 

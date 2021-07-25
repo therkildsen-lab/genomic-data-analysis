@@ -1,4 +1,5 @@
 name: "geonomic-data-analysis"
+output_dir: ../htmls
 navbar:
   title: "Data analysis pipelines with genomic data"
   left:
@@ -6,13 +7,11 @@ navbar:
     menu:
     - text: lcWGS pipeline
     - text: "Overview"
-      href: "markdowns/lcwgs_data_analysis.html"
+      href: "lcwgs_data_analysis.html"
     - text: "SNP calling"
-      href: "markdowns/angsd_global_snp_calling.html"
-output_dir: "."
+      href: "angsd_global_snp_calling.html"
 output:
   html_document:
-    theme: cerulean
     highlight: textmate
     toc: true 
     toc_float: true 

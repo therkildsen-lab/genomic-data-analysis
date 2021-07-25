@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>lcwgs_data_analysis.utf8</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data analysis pipelines with genomic data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    lcWGS
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">lcWGS pipeline</li>
+    <li>
+      <a href="markdowns/lcwgs_data_analysis.html">Overview</a>
+    </li>
+    <li>
+      <a href="markdowns/angsd_global_snp_calling.html">SNP calling</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div id="population-genomic-analysis-of-low-coverage-whole-genome-data" class="section level1">
+<h1>Population genomic analysis of low-coverage whole genome data</h1>
+<p>Pipelines for analyzing genomic data based on genotype likelihoods or population allele frequency data derived from genotype likelihoods.</p>
+<ul>
+<li><a href="#snp">SNP calling</a></li>
+<li><a href="#gl">Genotype likelihood estimation</a></li>
+<li><a href="#maf">Minor allele frequency estimation</a></li>
+<li><a href="#fst">Fst</a></li>
+<li><a href="#dxy">dxy</a></li>
+<li><a href="#diversity">Nucleotide diversity</a></li>
+<li><a href="#ld">Linkage disequilibrium</a></li>
+<li><a href="#relatedness">Relatedness</a></li>
+<li><a href="#pca">Individual-level PCA and PCoA</a></li>
+<li><a href="#admix">Admixture</a></li>
+<li><a href="#selection">Selection scan</a></li>
+<li><a href="#construct">conStruct</a></li>
+<li><a href="#eems">EEMS</a></li>
+<li><a href="#localpca">localPCA</a></li>
+<li><a href="#notes">Notes</a></li>
+</ul>
+<p><a name="snp"/></p>
+<div id="snp-calling" class="section level2">
+<h2>SNP calling</h2>
+<p>Run the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh">angsd_global_snp_calling.sh</a> script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>Path to a list of bamfiles with one file per line (<code>BAMLIST</code>), e.g. <code>path/bamlist.txt</code></li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to the indexed reference genome (<code>REFERENCE</code>), e.g. <code>path/reference_genome.fasta</code></li>
+<li>Minimum combined sequencing depth (<code>MINDP</code>), e.g. 0.33 x number of individuals</li>
+<li>Maximum combined sequencing depth across all individual (<code>MAXDP</code>), e.g = mean depth + 4 s.d.</li>
+<li>Minimum number of individuals (<code>MININD</code>) a read has to be present in, e.g. 50% of individuals</li>
+<li>The minimum base quality score (<code>MINQ</code>), e.g. <code>20</code></li>
+<li>Minimum minor allele frequency (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./angsd_global_snp_calling.sh \
+BAMLIST \
+BASEDIR \
+REFERENCE \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+MINMAF \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p><a name="gl"/></p>
+</div>
+<div id="genotype-likelihood-estimation" class="section level2">
+<h2>Genotype likelihood estimation</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_beagle.sh">get_beagle.sh</a> script to get genotype likelihoods for distinct sites (e.g. sites file from SNP calling script) in beagle format. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>A list of bamfiles with one file per line (<code>BAMLIST</code>), e.g. <code>path/bamlist.txt</code></li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Indexed reference genome (<code>REFERENCE</code>), e.g. <code>path/reference_genome.fasta</code></li>
+<li>Path to the SNP list (<code>SNPLIST</code>), e.g. <code>path/global_snp_list.txt</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_beagle.sh \
+BAMLIST \
+BASEDIR \
+REFERENCE \
+SNPLIST \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p><a name="maf"/></p>
+</div>
+<div id="minor-allele-frequency-estimation" class="section level2">
+<h2>Minor allele frequency estimation</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh">get_maf_per_pop.sh</a> script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to a tab deliminated sample table (<code>SAMPLETABLE</code>) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md">data-processing</a>. e.g. <code>path/sample_table.tsv</code></li>
+<li>Index of the column with population information in the sample table (<code>POPCOLUMN</code>), e.g. <code>5</code></li>
+<li>Prefix in file name of the bamfile list (<code>BAMLISTPREFIX</code>), e.g. <code>bam_list_realigned_</code></li>
+<li>Path to the indexed reference genome (<code>REFERENCE</code>), e.g. <code>path/reference_genome.fasta</code></li>
+<li>Path to the SNP list (<code>SNPLIST</code>), e.g. <code>path/global_snp_list.txt</code></li>
+<li>Minimum combined sequencing depth in a population (<code>MINDP</code>)</li>
+<li>Maximum combined sequencing depth across all individual in a population (<code>MAXDP</code>)</li>
+<li>Minimum number of individuals a read has to be present in a population (<code>MININD</code>)</li>
+<li>The minimum base quality score (<code>MINQ</code>), e.g <code>20</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_maf_per_pop.sh \
+BASEDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BAMLISTPREFIX \
+REFERENCE \
+SNPLIST \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p>Note: Important is that one uses <code>-doMajorMinor 3</code> when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies.</p>
+<p><a name="fst"/></p>
+</div>
+<div id="fst" class="section level2">
+<h2>Fst</h2>
+<ol style="list-style-type: decimal">
+<li>per SNP and genome-wide average</li>
+</ol>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh">get_fst.sh</a> script to estimate per SNP Fst and its genome average. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>Path to a directory where per population <code>saf.gz</code> files are located (<code>SAFDIR</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/popminind2/</code></li>
+<li>Path to a tab deliminated sample table (<code>SAMPLETABLE</code>) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md">data-processing</a>. e.g. <code>path/sample_table.tsv</code></li>
+<li>Index of the column with population information in the sample table (<code>POPCOLUMN</code>), e.g. <code>5</code></li>
+<li>Base name of the saf files excluding “.saf.gz” (<code>BASENAME</code>). This will be used as the base name of all output files, e.g. <code>_bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_fst.sh \
+SAFDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BASENAME \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>windowed</li>
+</ol>
+<p><a name="dxy"/></p>
+</div>
+<div id="dxy" class="section level2">
+<h2>dxy</h2>
+<ol style="list-style-type: decimal">
+<li><p>ngsTools</p></li>
+<li><p>David Marques’s script</p></li>
+</ol>
+<p><a name="diversity"/></p>
+</div>
+<div id="nucleotide-diversity-and-tajimas-d" class="section level2">
+<h2>Nucleotide diversity and Tajima’s D</h2>
+<p>Scripts to estimate the .saf file based on all sites that pass the filters (script1), which is further used to estimate nucleotide diversity and Tajima’s D (and other thetas) in defined windows (script2).</p>
+<p><a name="ld"/></p>
+</div>
+<div id="linkage-disequilibrium" class="section level2">
+<h2>Linkage disequilibrium</h2>
+<ol style="list-style-type: decimal">
+<li>ngsLD</li>
+</ol>
+<p><a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsLD.sh">run_ngsLD.sh</a></p>
+<p><a name="relatedness"/></p>
+</div>
+<div id="relatedness" class="section level2">
+<h2>Relatedness</h2>
+<p><a name="pca"/></p>
+</div>
+<div id="individual-level-pca-and-pcoa" class="section level2">
+<h2>Individual-level PCA and PCoA</h2>
+<p>Scripts to perform and plot principal components analyses (based on a covariance matrix) and principal coordinate analyses (based on a distance matrix).</p>
+<ol style="list-style-type: decimal">
+<li>PCAngsd</li>
+</ol>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for pca use <code>pca</code> (other options: selection, inbreedSites, kinship, admix)</li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+pca \
+1 \
+1 &gt; path/output_logfile.nohup &amp;</code></pre>
+<p>The covariance matrix can be used as input for the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R">individual_pca_functions.R</a> R script to create and plot a PCA. The input parameters for the <code>PCA()</code> function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the <code>DAPC()</code> function.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>PCoA</li>
+</ol>
+<p>The <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R">individual_pca_functions.R</a> R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a <code>.ibsMat</code> suffix. This distance matrix can also be obtained e.g. with <a href="https://github.com/fgvieira/ngsDist">ngsDist</a>. PCoA can then be performed using the <code>PCoA()</code> function as described in the R script.</p>
+<p><a name="admix"/></p>
+</div>
+<div id="admixture" class="section level2">
+<h2>Admixture</h2>
+<ol style="list-style-type: decimal">
+<li>ngsAdmix</li>
+</ol>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh">run_ngsadmix.sh</a> script to run an admixture analysis using ngsAdmix. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minimum minor allele frequency (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Minimum number of K (<code>MINK</code>), e.g. <code>1</code></li>
+<li>Maximum number of K (<code>MAXK</code>), e.g. <code>10</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_ngsadmix.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+MINK \
+MAXK \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>PCAngsd</li>
+</ol>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> to run an admixture analysis with PCAngsd. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for admixture use <code>admix</code> (other options: pca, selection, inbreedSites, kinship)</li>
+<li>Minimum number of eigenvectors to use in the modelling of individual allele frequencies (<code>MINE</code>), e.g. <code>1</code></li>
+<li>Maximum number of eigenvectors to use in the modelling of individual allele frequencies (<code>MAXE</code>), e.g. <code>10</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+admix \
+MINE \
+MAXE &gt; path/output_logfile.nohup &amp;</code></pre>
+<p><a name="selection"/></p>
+</div>
+<div id="selection-scan" class="section level2">
+<h2>Selection scan</h2>
+<ol style="list-style-type: decimal">
+<li>PCAngsd</li>
+</ol>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> script to run a selection scan using PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). The following files and parameters have to be provided to run PCAngsd:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for pca use <code>selection</code> (other options: pca, inbreedSites, kinship, admix)</li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+selection \
+1 \
+1 &gt; path/output_logfile.nohup &amp;</code></pre>
+<p>This script will performs a genome selection scan along all significant PCs. If you want to define the number of PCs on your own, you can also write your own script following <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/exploratory_data_analysis.md#run-pcangsd-with-the-selection-option">this example</a>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>outflank</li>
+</ol>
+<p><a name="construct"/></p>
+</div>
+<div id="construct" class="section level2">
+<h2>conStruct</h2>
+<p><a name="eems"/></p>
+</div>
+<div id="eems" class="section level2">
+<h2>EEMS</h2>
+<p>Estimating Effective Migration Surfaces. These scripts are for the use of a modifief version that works with a pairwise Fst matrix rather than individual pairwise genetic dissimilarity estimates. See <a href="https://github.com/dipetkov/eems">EEMS github page</a> for details.</p>
+<p>Required input files:</p>
+<ol style="list-style-type: decimal">
+<li>datapath.diffs: Symmetric Fst matrix with zeros on the diagonal.</li>
+<li>datapath.coord: the sample coordinates (longitude and latitude coordinates per sample (tab separated), one sample per line)</li>
+<li>datapath.outer: the habitat coordinates (as a sequence of vertices that outline a closed polygon)</li>
+</ol>
+<p>Habitat outline can be created manually as a “polyline” on this <a href="http://www.birdtheme.org/useful/v3tool.html">site</a>. The habitat vertices should be listed counterclockwise and form a closed polygon.</p>
+<p>Furthermore, a parameter file (e.g. params-simno1.ini) has to be created that provides paths to the input files and additional parameters. The file should look like this:</p>
+<pre><code>datapath = ./workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+mcmcpath = /workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+nIndiv = 11
+nSites = 4696248 
+nDemes = 1000
+diploid = true
+numMCMCIter = 2000000
+numBurnIter = 1000000
+numThinIter = 9999</code></pre>
+<p>This file specifies the required arguments: the path to the input data (datapath) the path to the output data (mcmcpath) the number of samples (nIndiv) the number of markers (nSites) the density of the population grid (nDemes) is the species diploid or haploid (diploid) the number of MCMC and burn-in iterations (numMCMCIter, numBurnIter) and the thinning interval (numThinIter).</p>
+<p>EEMS can be run using the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_eems_fst.sh">run_eems_fst.sh</a> script with the specified parameter file</p>
+<pre class="{bash}"><code>nohup sh run_eems_fst.sh \
+/path/parameterfile.ini \
+&gt; /path/logfiles/nohup.log &amp;</code></pre>
+<p>The EEMS results can be plotted using the rEEMSplots R-package.</p>
+<p>Commands for installing the rEEMSplots R-package and dependencies:</p>
+<pre class="{r}"><code>install.packages(c(&quot;Rcpp&quot;,&quot;RcppEigen&quot;,&quot;raster&quot;,&quot;rgeos&quot;,&quot;sp&quot;,&quot;rgdal&quot;,&quot;rworldmap&quot;,&quot;rworldxra&quot;))
+
+if (file.exists(&quot;./rEEMSplots/&quot;)) {
+  install.packages(&quot;rEEMSplots&quot;, repos = NULL, type = &quot;source&quot;)
+} else {
+  stop(&quot;Move to the directory that contains the rEEMSplots source to install the package.&quot;)
+}</code></pre>
+<p>There are many different options for modifying the resulting plots. The following code shows how to plot the results including a map of the study area, grid and migration rate estimates. The package also automatically plots other diagnostic plots. More details can be found on the EEMS github page.</p>
+<pre class="{r}"><code>library(rEEMSplots)
+library(&quot;rgdal&quot;)
+library(&quot;rworldmap&quot;)
+library(&quot;rworldxra&quot;)
+
+mcmcpath = &quot;/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems&quot;
+plotpath = &quot;/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems&quot;
+
+projection_none &lt;- &quot;+proj=longlat +datum=WGS84&quot;
+projection_mercator &lt;- &quot;+proj=merc +datum=WGS84&quot;
+
+eems.plots(mcmcpath, plotpath, longlat = TRUE
+           ,out.png=FALSE, add.grid = TRUE
+           ,col.grid = &quot;gray90&quot;,
+           ,add.demes = TRUE, remove.singletons = FALSE
+           ,projection.in = projection_none
+           ,projection.out = projection_mercator
+           ,add.map = TRUE, 
+           ,col.map = &quot;black&quot;
+           ,lwd.map = 1)</code></pre>
+<p><a name="localpca"/></p>
+</div>
+<div id="localpca" class="section level2">
+<h2>localPCA</h2>
+<p>First, use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/subset_beagle_by_lg.sh">subset_beagle_by_lg.sh</a> script to subset the beagle files by LGs or chromosomes. A range of files and parameters have to be provided in the following order: + Path to a genome-wide beagle file (<code>BEAGLE</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz</code> + Path to a list of LGs or chromosomes that you want to subset by (<code>LGLIST</code>), e.g. <code>/workdir/cod/greenland-cod/sample_lists/lg_list.txt</code></p>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./subset_beagle_by_lg.sh \
+BEAGLE \
+LGLIST \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p>Then, use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_local_pca.sh">run_local_pca.sh</a> script to run a localPCA analysis. A range of files and parameters have to be provided in the following order: + Path to a beagle.gz file that you have used for the subsetting step (<code>BEAGLE</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz</code> + Path to a list of LGs or chromosomes that you have used for the subsetting step (<code>LGLIST</code>), e.g. <code>/workdir/cod/greenland-cod/sample_lists/lg_list.txt</code> + Number of SNPs to include in each window (<code>SNP</code>), e.g. 10000 + Number of PCs to keep for each window (<code>PC</code>), e.g. 2</p>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_local_pca.sh \
+BEAGLE \
+LGLIST \
+SNP \
+PC \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p><a name="notes"/></p>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<p>Add potential issues, our recommended practices, link to scripts and insructions</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
