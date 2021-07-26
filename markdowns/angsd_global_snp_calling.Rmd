@@ -1,8 +1,6 @@
 ---
 title: "SNP calling with ANGSD"
-output: 
-  html_document:  
-    keep_md: TRUE
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
