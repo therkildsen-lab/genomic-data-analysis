@@ -1,5 +1,5 @@
 name: "geonomic-data-analysis"
-output_dir: ../htmls
+output_dir: ../docs
 navbar:
   title: "Data analysis pipelines with genomic data"
   left:
