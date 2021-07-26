@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>localPCA</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,27 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">localPCA</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
-<ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
-</ul>
-</div>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>First, use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/subset_beagle_by_lg.sh">subset_beagle_by_lg.sh</a> script to subset the beagle files by LGs or chromosomes. A range of files and parameters have to be provided in the following order: + Path to a genome-wide beagle file (<code>BEAGLE</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz</code> + Path to a list of LGs or chromosomes that you want to subset by (<code>LGLIST</code>), e.g. <code>/workdir/cod/greenland-cod/sample_lists/lg_list.txt</code></p>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./subset_beagle_by_lg.sh \
+BEAGLE \
+LGLIST \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+<p>Then, use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_local_pca.sh">run_local_pca.sh</a> script to run a localPCA analysis. A range of files and parameters have to be provided in the following order: + Path to a beagle.gz file that you have used for the subsetting step (<code>BEAGLE</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/bam_list_realigned_mindp161_maxdp768_minind97_minq20.beagle.gz</code> + Path to a list of LGs or chromosomes that you have used for the subsetting step (<code>LGLIST</code>), e.g. <code>/workdir/cod/greenland-cod/sample_lists/lg_list.txt</code> + Number of SNPs to include in each window (<code>SNP</code>), e.g. 10000 + Number of PCs to keep for each window (<code>PC</code>), e.g. 2</p>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_local_pca.sh \
+BEAGLE \
+LGLIST \
+SNP \
+PC \
+&gt; path/output_logfile.nohup &amp;</code></pre>
 </div>
 
 

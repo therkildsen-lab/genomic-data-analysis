@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Fst estimation</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,33 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Fst estimation</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh">get_fst.sh</a> script to estimate per SNP Fst and its genome average. A range of files and parameters have to be provided in the following order:</p>
 <ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
+<li>Path to a directory where per population <code>saf.gz</code> files are located (<code>SAFDIR</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/popminind2/</code></li>
+<li>Path to a tab deliminated sample table (<code>SAMPLETABLE</code>) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md">data-processing</a>. e.g. <code>path/sample_table.tsv</code></li>
+<li>Index of the column with population information in the sample table (<code>POPCOLUMN</code>), e.g. <code>5</code></li>
+<li>Base name of the saf files excluding “.saf.gz” (<code>BASENAME</code>). This will be used as the base name of all output files, e.g. <code>_bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2</code></li>
 </ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_fst.sh \
+SAFDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BASENAME \
+&gt; path/output_logfile.nohup &amp;</code></pre>
 </div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<ul>
+<li>Sliding-window Fst can be computed from the per-site Fst output using custom scripts (e.g. in R)</li>
+</ul>
 </div>
 
 

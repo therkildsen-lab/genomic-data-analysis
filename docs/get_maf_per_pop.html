@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Minor allele frequency estimation</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,43 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Minor allele frequency estimation</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_maf_per_pop.sh">get_maf_per_pop.sh</a> script to get minor allele frequency (MAF) estimates for distinct sites (e.g. sites file from SNP calling script) for individual groups of individuals, i.e. populations. This script loops over populations as provided in the sample table. The following additional (not explained above) parameters and files have to be provided:</p>
 <ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to a tab deliminated sample table (<code>SAMPLETABLE</code>) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md">data-processing</a>. e.g. <code>path/sample_table.tsv</code></li>
+<li>Index of the column with population information in the sample table (<code>POPCOLUMN</code>), e.g. <code>5</code></li>
+<li>Prefix in file name of the bamfile list (<code>BAMLISTPREFIX</code>), e.g. <code>bam_list_realigned_</code></li>
+<li>Path to the indexed reference genome (<code>REFERENCE</code>), e.g. <code>path/reference_genome.fasta</code></li>
+<li>Path to the SNP list (<code>SNPLIST</code>), e.g. <code>path/global_snp_list.txt</code></li>
+<li>Minimum combined sequencing depth in a population (<code>MINDP</code>)</li>
+<li>Maximum combined sequencing depth across all individual in a population (<code>MAXDP</code>)</li>
+<li>Minimum number of individuals a read has to be present in a population (<code>MININD</code>)</li>
+<li>The minimum base quality score (<code>MINQ</code>), e.g <code>20</code></li>
 </ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_maf_per_pop.sh \
+BASEDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BAMLISTPREFIX \
+REFERENCE \
+SNPLIST \
+MINDP \
+MAXDP \
+MININD \
+MINQ \
+&gt; path/output_logfile.nohup &amp;</code></pre>
 </div>
+<div id="note" class="section level2">
+<h2>Note</h2>
+<p>Important is that one uses <code>-doMajorMinor 3</code> when providing a sites file to use the provided major and minor allele as the basis for estimating minor allele frequencies.</p>
 </div>
 
 

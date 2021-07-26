@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Admixture analysis</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,49 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Admixture analysis</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
+<div id="ngsadmix" class="section level2">
+<h2>ngsAdmix</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh">run_ngsadmix.sh</a> script to run an admixture analysis using ngsAdmix. A range of files and parameters have to be provided in the following order:</p>
 <ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minimum minor allele frequency (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Minimum number of K (<code>MINK</code>), e.g. <code>1</code></li>
+<li>Maximum number of K (<code>MAXK</code>), e.g. <code>10</code></li>
 </ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_ngsadmix.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+MINK \
+MAXK \
+&gt; path/output_logfile.nohup &amp;</code></pre>
 </div>
+<div id="pcangsd" class="section level2">
+<h2>PCAngsd</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> to run an admixture analysis with PCAngsd. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for admixture use <code>admix</code> (other options: pca, selection, inbreedSites, kinship)</li>
+<li>Minimum number of eigenvectors to use in the modelling of individual allele frequencies (<code>MINE</code>), e.g. <code>1</code></li>
+<li>Maximum number of eigenvectors to use in the modelling of individual allele frequencies (<code>MAXE</code>), e.g. <code>10</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+admix \
+MINE \
+MAXE &gt; path/output_logfile.nohup &amp;</code></pre>
 </div>
 
 

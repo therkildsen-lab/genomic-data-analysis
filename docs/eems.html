@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>EEMS</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,66 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">EEMS</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
-<ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
-</ul>
-</div>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>Estimating Effective Migration Surfaces. These scripts are for the use of a modifief version that works with a pairwise Fst matrix rather than individual pairwise genetic dissimilarity estimates. See <a href="https://github.com/dipetkov/eems">EEMS github page</a> for details.</p>
+<p>Required input files:</p>
+<ol style="list-style-type: decimal">
+<li>datapath.diffs: Symmetric Fst matrix with zeros on the diagonal.</li>
+<li>datapath.coord: the sample coordinates (longitude and latitude coordinates per sample (tab separated), one sample per line)</li>
+<li>datapath.outer: the habitat coordinates (as a sequence of vertices that outline a closed polygon)</li>
+</ol>
+<p>Habitat outline can be created manually as a “polyline” on this <a href="http://www.birdtheme.org/useful/v3tool.html">site</a>. The habitat vertices should be listed counterclockwise and form a closed polygon.</p>
+<p>Furthermore, a parameter file (e.g. params-simno1.ini) has to be created that provides paths to the input files and additional parameters. The file should look like this:</p>
+<pre><code>datapath = ./workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+mcmcpath = /workdir/arne/results/mme_popstructure/eems_res/silverside_eems
+nIndiv = 11
+nSites = 4696248 
+nDemes = 1000
+diploid = true
+numMCMCIter = 2000000
+numBurnIter = 1000000
+numThinIter = 9999</code></pre>
+<p>This file specifies the required arguments: the path to the input data (datapath) the path to the output data (mcmcpath) the number of samples (nIndiv) the number of markers (nSites) the density of the population grid (nDemes) is the species diploid or haploid (diploid) the number of MCMC and burn-in iterations (numMCMCIter, numBurnIter) and the thinning interval (numThinIter).</p>
+<p>EEMS can be run using the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_eems_fst.sh">run_eems_fst.sh</a> script with the specified parameter file</p>
+<pre class="bash"><code>nohup sh run_eems_fst.sh \
+/path/parameterfile.ini \
+&gt; /path/logfiles/nohup.log &amp;</code></pre>
+<p>The EEMS results can be plotted using the rEEMSplots R-package.</p>
+<p>Commands for installing the rEEMSplots R-package and dependencies:</p>
+<pre class="r"><code>install.packages(c(&quot;Rcpp&quot;,&quot;RcppEigen&quot;,&quot;raster&quot;,&quot;rgeos&quot;,&quot;sp&quot;,&quot;rgdal&quot;,&quot;rworldmap&quot;,&quot;rworldxra&quot;))
+
+if (file.exists(&quot;./rEEMSplots/&quot;)) {
+  install.packages(&quot;rEEMSplots&quot;, repos = NULL, type = &quot;source&quot;)
+} else {
+  stop(&quot;Move to the directory that contains the rEEMSplots source to install the package.&quot;)
+}</code></pre>
+<p>There are many different options for modifying the resulting plots. The following code shows how to plot the results including a map of the study area, grid and migration rate estimates. The package also automatically plots other diagnostic plots. More details can be found on the EEMS github page.</p>
+<pre class="r"><code>library(rEEMSplots)
+library(&quot;rgdal&quot;)
+library(&quot;rworldmap&quot;)
+library(&quot;rworldxra&quot;)
+
+mcmcpath = &quot;/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems&quot;
+plotpath = &quot;/Users/arnejacobs/Dropbox/Cornell_Postdoc/analysis/results/mme_popstructure/eems/silverside_eems&quot;
+
+projection_none &lt;- &quot;+proj=longlat +datum=WGS84&quot;
+projection_mercator &lt;- &quot;+proj=merc +datum=WGS84&quot;
+
+eems.plots(mcmcpath, plotpath, longlat = TRUE
+           ,out.png=FALSE, add.grid = TRUE
+           ,col.grid = &quot;gray90&quot;,
+           ,add.demes = TRUE, remove.singletons = FALSE
+           ,projection.in = projection_none
+           ,projection.out = projection_mercator
+           ,add.map = TRUE, 
+           ,col.map = &quot;black&quot;
+           ,lwd.map = 1)</code></pre>
 </div>
 
 

@@ -1,0 +1,37 @@
+---
+title: "Selection scan"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PCAngsd
+
+#### Instructions
+
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run a selection scan using PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). The following files and parameters have to be provided to run PCAngsd:
+
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minor allele frequency filter (`MINMAF`), e.g. `0.05`
++ Type of analysis to run: for pca use `selection` (other options: pca, inbreedSites, kinship, admix)
+
+Run the script using the following command with nohup from the script directory:
+
+```{bash eval=FALSE}
+nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+selection \
+1 \
+1 > path/output_logfile.nohup &
+```
+
+This script will performs a genome selection scan along all significant PCs. If you want to define the number of PCs on your own, you can also write your own script following [this example](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/exploratory_data_analysis.md#run-pcangsd-with-the-selection-option).
+
+## OutFLANK
+
+Under construction

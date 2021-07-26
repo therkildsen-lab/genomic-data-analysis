@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Individual-level PCA and PCoA</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,33 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Individual-level PCA and PCoA</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
+<div id="pca-with-pcangsd" class="section level2">
+<h2>PCA with PCAngsd</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:</p>
 <ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for pca use <code>pca</code> (other options: selection, inbreedSites, kinship, admix)</li>
 </ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+pca \
+1 \
+1 &gt; path/output_logfile.nohup &amp;</code></pre>
+<p>The covariance matrix can be used as input for the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R">individual_pca_functions.R</a> R script to create and plot a PCA. The input parameters for the <code>PCA()</code> function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the <code>DAPC()</code> function.</p>
 </div>
+<div id="pcoa-with-angsd" class="section level2">
+<h2>PCoA with ANGSD</h2>
+<p>The <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R">individual_pca_functions.R</a> R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a <code>.ibsMat</code> suffix. This distance matrix can also be obtained e.g. with <a href="https://github.com/fgvieira/ngsDist">ngsDist</a>. PCoA can then be performed using the <code>PCoA()</code> function as described in the R script.</p>
 </div>
 
 

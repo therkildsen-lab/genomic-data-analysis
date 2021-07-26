@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <br> 
 
-## Script
+## Instructions
 
 Run the [angsd_global_snp_calling.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/angsd_global_snp_calling.sh) script to detect variant sites in a population or group of populations using angsd with a p-value ≤ 1e-6 (hard coded). A range of files and parameters have to be provided in the following order:
 

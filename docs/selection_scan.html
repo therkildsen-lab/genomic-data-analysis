@@ -11,7 +11,7 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Selection scan</title>
 
 <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -384,23 +384,36 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Selection scan</h1>
 
 </div>
 
 
-<p>This website contains genomic data analysis pipelines developed and maintained by the <a href="https://www.therkildsenlab.com/">Therkildsen lab</a> at Cornell University.</p>
-<div id="key-contibutors" class="section level2">
-<h2>Key Contibutors</h2>
-<div id="lcwgs-pipeline" class="section level4">
-<h4>LcWGS pipeline</h4>
+<div id="pcangsd" class="section level2">
+<h2>PCAngsd</h2>
+<div id="instructions" class="section level4">
+<h4>Instructions</h4>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh">run_pcangsd.sh</a> script to run a selection scan using PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). The following files and parameters have to be provided to run PCAngsd:</p>
 <ul>
-<li>Arne Jacobs</li>
-<li>R. Nicolas Lou</li>
-<li>Nina O. Therkildsen</li>
-<li>Aryn P. Wilder</li>
+<li>The project’s base directory (<code>BASEDIR</code>), e.g. <code>path/base_directory/</code></li>
+<li>Path to beagle formatted genotype likelihood file (<code>BEAGLE</code>), e.g. <code>path/genotype_likelihood.beagle.gz</code></li>
+<li>Minor allele frequency filter (<code>MINMAF</code>), e.g. <code>0.05</code></li>
+<li>Type of analysis to run: for pca use <code>selection</code> (other options: pca, inbreedSites, kinship, admix)</li>
 </ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+selection \
+1 \
+1 &gt; path/output_logfile.nohup &amp;</code></pre>
+<p>This script will performs a genome selection scan along all significant PCs. If you want to define the number of PCs on your own, you can also write your own script following <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/exploratory_data_analysis.md#run-pcangsd-with-the-selection-option">this example</a>.</p>
 </div>
+</div>
+<div id="outflank" class="section level2">
+<h2>OutFLANK</h2>
+<p>Under construction</p>
 </div>
 
 

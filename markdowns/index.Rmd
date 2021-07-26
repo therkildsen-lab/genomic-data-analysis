@@ -7,4 +7,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This website contains data analysis pipelines developed and maintained the Therkildsen lab at Cornell University. 
+This website contains genomic data analysis pipelines developed and maintained by the [Therkildsen lab](https://www.therkildsenlab.com/) at Cornell University. 
+
+## Key Contibutors
+
+#### LcWGS pipeline
+
+* Arne Jacobs
+* R. Nicolas Lou
+* Nina O. Therkildsen
+* Aryn P. Wilder
