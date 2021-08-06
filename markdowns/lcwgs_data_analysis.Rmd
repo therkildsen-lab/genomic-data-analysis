@@ -1,8 +1,6 @@
 ---
 title: "Population genomic analysis of low-coverage whole genome data"
-output: 
-  html_document:  
-    keep_md: TRUE
+output: html_document
 ---
 
 ```{r setup, include=FALSE}

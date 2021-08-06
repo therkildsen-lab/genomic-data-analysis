@@ -11,12 +11,12 @@
 
 
 
-<title>Data analysis pipelines with genomic data</title>
+<title>Fst estimation</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -319,17 +319,56 @@ div.tocify {
       <ul class="nav navbar-nav">
         <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    lcWGS
+    lcWGS pipeline
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">lcWGS pipeline</li>
+    <li class="dropdown-header">Pipeline for low-coverage whole genome sequencing data</li>
     <li>
-      <a href="../markdowns/lcwgs_data_analysis.html">Overview</a>
+      <a href="lcwgs_data_analysis.html">Overview</a>
     </li>
     <li>
-      <a href="../markdowns/angsd_global_snp_calling.html">SNP calling</a>
+      <a href="angsd_global_snp_calling.html">SNP calling</a>
+    </li>
+    <li>
+      <a href="ld.html">Linkage disequilibrium</a>
+    </li>
+    <li>
+      <a href="pca.html">Individual-level PCA and PCoA</a>
+    </li>
+    <li>
+      <a href="local_pca.html">localPCA</a>
+    </li>
+    <li>
+      <a href="admixture.html">Admixture analysis</a>
+    </li>
+    <li>
+      <a href="relatedness.html">Relatedness &amp; pedigree</a>
+    </li>
+    <li>
+      <a href="selection_scan.html">Selection scan</a>
+    </li>
+    <li>
+      <a href="gwas.html">GWAS</a>
+    </li>
+    <li>
+      <a href="diversity_per_ind.html">Individual-level genetic diversity</a>
+    </li>
+    <li>
+      <a href="get_maf_per_pop.html">Minor allele frequency estimation</a>
+    </li>
+    <li>
+      <a href="fst.html">Fst estimation</a>
+    </li>
+    <li>
+      <a href="dxy.html">dxy estimation</a>
+    </li>
+    <li>
+      <a href="eems.html">EEMS</a>
+    </li>
+    <li>
+      <a href="diversity_per_pop.html">Population-level genetic diversity and neutrality stats</a>
     </li>
   </ul>
 </li>
@@ -345,12 +384,34 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Data analysis pipelines with genomic data</h1>
+<h1 class="title toc-ignore">Fst estimation</h1>
 
 </div>
 
 
-<p>This website contains data analysis pipelines developed and maintained the Therkildsen lab at Cornell University.</p>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>Use the <a href="https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/get_fst.sh">get_fst.sh</a> script to estimate per SNP Fst and its genome average. A range of files and parameters have to be provided in the following order:</p>
+<ul>
+<li>Path to a directory where per population <code>saf.gz</code> files are located (<code>SAFDIR</code>), e.g. <code>/workdir/cod/greenland-cod/angsd/popminind2/</code></li>
+<li>Path to a tab deliminated sample table (<code>SAMPLETABLE</code>) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in <a href="https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md">data-processing</a>. e.g. <code>path/sample_table.tsv</code></li>
+<li>Index of the column with population information in the sample table (<code>POPCOLUMN</code>), e.g. <code>5</code></li>
+<li>Base name of the saf files excluding “.saf.gz” (<code>BASENAME</code>). This will be used as the base name of all output files, e.g. <code>_bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2</code></li>
+</ul>
+<p>Run the script using the following command with nohup from the script directory:</p>
+<pre class="bash"><code>nohup ./get_fst.sh \
+SAFDIR \
+SAMPLETABLE \
+POPCOLUMN \
+BASENAME \
+&gt; path/output_logfile.nohup &amp;</code></pre>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<ul>
+<li>Sliding-window Fst can be computed from the per-site Fst output using custom scripts (e.g. in R)</li>
+</ul>
+</div>
 
 
 
@@ -390,6 +451,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

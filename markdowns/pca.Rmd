@@ -1,0 +1,35 @@
+---
+title: "Individual-level PCA and PCoA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PCA with PCAngsd
+
+Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) script to run PCAngsd based on provided genotype likelihoods in beagle format (get with angsd). This will create a covariance matrix that can be used for principal components analyses in R using the R script described below. The following files and parameters have to be provided to run PCAngsd:
+
++ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
++ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
++ Minor allele frequency filter (`MINMAF`), e.g. `0.05`
++ Type of analysis to run: for pca use `pca` (other options: selection, inbreedSites, kinship, admix)
+
+Run the script using the following command with nohup from the script directory:
+
+``` {bash eval=FALSE}
+nohup ./run_pcangsd.sh \
+BASEDIR \
+BEAGLE \
+MINMAF \
+pca \
+1 \
+1 > path/output_logfile.nohup &
+```
+
+The covariance matrix can be used as input for the [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script to create and plot a PCA. The input parameters for the `PCA()` function are described in the R script. This script can then also be used to perform a discriminant analysis of principal components (DAPC) on the PC scores using the `DAPC()` function.
+
+## PCoA with ANGSD
+
+The [individual_pca_functions.R](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/individual_pca_functions.R) R script can also be used to perform a prinicpal coordinate analysis (PCoA) based on a genetic distance matrix, which can be generated in the SNP calling step with a `.ibsMat` suffix. This distance matrix can also be obtained e.g. with [ngsDist](https://github.com/fgvieira/ngsDist). PCoA can then be performed using the `PCoA()` function as described in the R script. 
