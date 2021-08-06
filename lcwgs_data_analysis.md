@@ -116,7 +116,7 @@ Use the [get_fst.sh](https://github.com/therkildsen-lab/genomic-data-analysis/bl
 + Path to a directory where per population `saf.gz` files are located (`SAFDIR`), e.g. `/workdir/cod/greenland-cod/angsd/popminind2/`
 + Path to a tab deliminated sample table (`SAMPLETABLE`) where the 4th column is the sample ID, the 2nd column is the lane number, and the 3rd column is sequence ID. The combination of these three columns have to be unique, which then forms the 1st column in the format of sampleID_seqID_laneID. The 6th column should be data type, which is either pe or se. This is the same as the merged sample table used in [data-processing](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/data_processing.md). e.g. `path/sample_table.tsv`
 + Index of the column with population information in the sample table (`POPCOLUMN`), e.g. `5`
-+ Base name of the saf files excluding ".saf.gz" (`BASENAME`). This will be used as the base name of all output files, e.g. `_bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2`
++ Base name of the saf files excluding ".saf.gz" (`BASENAME`). This will be used as the base name of all output files, e.g. `_global_snp_list_bam_list_realigned_mindp161_maxdp768_minind97_minq20_popminind2`
 
 Run the script using the following command with nohup from the script directory:
 
