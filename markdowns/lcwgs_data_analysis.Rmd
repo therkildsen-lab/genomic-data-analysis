@@ -1,6 +1,8 @@
 ---
 title: "Population genomic analysis of low-coverage whole genome data"
-output: html_document
+output: 
+  github_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -34,3 +36,22 @@ We recommend you to have a project base directory that contains the following su
   
   * `scripts` scripts specific to your projects (e.g. merging certain bam files)
 
+## Analyses based on variant sites
+
+  * [SNP calling](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/angsd_global_snp_calling.md)
+  
+  * [Linkage disequilibrium estimation and pruning](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/ld.md)
+  
+  * [Principal component analysis](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/pca.md)
+  
+  * [Admixture analysis](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/admixture.md)
+  
+  * [Allele frequency estimation](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/get_maf_per_pop.md)
+  
+  * [Fst estimation](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/fst.md)
+  
+## Analyses based on all sites
+
+  * [Population-level genetic diversity](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/diversity_per_pop.md)
+  
+  * [Individual-level genetic diversity](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/diversity_per_ind.md)
