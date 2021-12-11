@@ -1,35 +1,154 @@
 ---
 title: "Admixture analysis"
-output: html_document
+output: 
+  github_document:
+    toc: true
+    toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## ngsAdmix
+<br>
 
-Use the [run_ngsadmix.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh) script to run an admixture analysis using ngsAdmix. A range of files and parameters have to be provided in the following order:
+## Introduction
 
-+ The project's base directory (`BASEDIR`), e.g. `path/base_directory/`
-+ Path to beagle formatted genotype likelihood file (`BEAGLE`), e.g. `path/genotype_likelihood.beagle.gz`
-+ Minimum minor allele frequency (`MINMAF`), e.g. `0.05`
-+ Minimum number of K (`MINK`), e.g. `1`
-+ Maximum number of K (`MAXK`), e.g. `10`
+Admixture analysis is a model-based clustering method for the analysis of population structure and ancestry. Recently, researchers have extend the classical Stucture (Pritchard et al. 2000) and Admixture (Alexander et al. 2009)  models to allow for genotype likelihoods as input. These methods include [NGSAdmix](https://github.com/aalbrechtsen/NGSadmix), [PCAngsd](https://github.com/Rosemeis/pcangsd), [Ohana](https://github.com/jade-cheng/ohana), and others. 
 
-Run the script using the following command with nohup from the script directory:
+<br>
+
+## NGSadmix
+
+<br>
+
+#### Data preparation
+
+NGSAdmix takes beagle formatted genoype likelihood files as input. Like other programs for admixture analysis, independence among markders is assumed by NGSAdmix, so we do not recommend you to directly use the `beagle.gz` file generated from the SNP calling step with ANGSD. Instead, LD pruning should be preformed on this set of SNPs first. Click [here](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/markdowns/ld.md) for details on LD pruning. 
+
+<br>
+
+#### Standalone server
+
+Run the [run_ngsadmix.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_ngsadmix.sh) script with `nohup bash` and pass the following input variables as positional parameters **in the given order**:
+
+1. `INPUT_PATH`: Path to directory containing the input file, i.e. the LD-pruned, beagle formatted, genotype likelihood file file (e.g. `/workdir/cod/greenland-cod/angsd/`)
+2. `BEAGLE`: Name of the LD-pruned, beagle formatted, genotype likelihood file (e.g. `bam_list_realigned_mincov_contamination_filtered_mindp368_maxdp928_minind167_minq20_downsampled_unlinked.beagle.gz`)
+3. `MINMAF`: Minimum allele frequency filter (e.g. `0.05`)
+4. `MINK`: Minimum value of K to model (e.g. `1`). K often represent the number of ancestral populations 
+5. `MAXK`: Maximum value of K to model (e.g. `6`). K often represent the number of ancestral populations
+6. `THREADS`: Number of parallel threads to use (default value is `8`, but the program can use a lot more if they are made available)
+7. `NGSADMIX`: Path to NGSAdmix (default value is `/programs/NGSadmix/NGSadmix`)
+
+Note that if you would like to, for example, specify the path to NGSLD yourself, you will need to specify all variables before it, even if some of them have a default value (e.g. `THREADS`) 
+
+Below is an example taken from the Greenland cod project:
 
 ``` {bash eval=FALSE}
-nohup ./run_ngsadmix.sh \
-BASEDIR \
-BEAGLE \
-MINMAF \
-MINK \
-MAXK \
-> path/output_logfile.nohup &
+nohup bash /workdir/genomic-data-analysis/scripts/run_ngsadmix.sh \
+/workdir/cod/greenland-cod/angsd/ \
+bam_list_realigned_mincov_contamination_filtered_mindp368_maxdp928_minind167_minq20_downsampled_unlinked.beagle.gz \
+0.05 \
+1 \
+6 \
+8 \
+/programs/NGSadmix/NGSadmix &
 ```
 
-## PCAngsd
+<br>
+
+#### Computer cluster
+
+With a high-performance cluster, you can greatly speed things up by running each value of K as a separate array job. To do this, copy the script below and make several modifications in lines above the line of hash marks (`#####`). The content below the line of hashmarks does not need to be altered.
+
+* You will need to modify some of the slurm headers to fit your scheduler and cluster system. E.g.
+    
+    * location of the log file (`--output`)
+    * the queue to submit your job to `--partition`
+    * the number of array jobs to submit (`--array`). **Importantly**, this should be the range of k values that you would like to model. It does not need to start with 1 (e.g. `1-6`)
+    * the number of CPU cores (`--ntasks`) and memory (`--mem`) to request for each array
+    
+* You will need to mount the appropriate server where your input data is stored.
+
+* You will need to define the same variables as in case of a standalone server. Make sure that the path should be relative to the computing node, not the node that you submit the job from.
+    
+    * There is an extra variable, `SCRIPT`, which is the location where the `run_ngsadmix.sh` script is stored (relative to the computing node)
+    * It is important to make sure the you request the same number of CPU cores (`--ntasks` in slurm) as you specify NGSadmix to use (`THREADS`)
+
+```{bash eval=FALSE}
+echo '#!/bin/bash
+#SBATCH --job-name=ngsadmix
+#SBATCH --output=/home/rl683/slurm/log/ngsadmix_greenland.log
+#SBATCH --partition=long7
+#SBATCH --nodes=1
+#SBATCH --ntasks=16
+#SBATCH --array=1-6
+#SBATCH --mem=50G
+
+## Mount nt246
+/programs/bin/labutils/mount_server cbsunt246 /workdir
+
+## Define some variables
+INPUT_PATH=/fs/cbsunt246/workdir/cod/greenland-cod/angsd/
+BEAGLE=bam_list_realigned_mincov_contamination_filtered_mindp368_maxdp928_minind167_minq20_downsampled_unlinked.beagle.gz
+MINMAF=0.05
+THREADS=16
+NGSADMIX=/programs/NGSadmix/NGSadmix
+SCRIPT=/fs/cbsunt246/workdir/genomic-data-analysis/scripts/run_ngsadmix.sh
+
+##################################################
+
+## Keep a record of the Job ID
+echo $SLURM_JOB_ID
+
+## Create and move to working directory for job
+WORKDIR=/workdir/$USER/$SLURM_JOB_ID-$SLURM_ARRAY_TASK_ID/
+mkdir -p $WORKDIR
+cd $WORKDIR
+
+## Transfer the input files
+cp $INPUT_PATH$BEAGLE $WORKDIR
+
+## Run the run_ngsadmix.sh script
+bash $SCRIPT \
+$WORKDIR \
+$BEAGLE \
+$MINMAF \
+$SLURM_ARRAY_TASK_ID \
+$SLURM_ARRAY_TASK_ID \
+$THREADS \
+$NGSADMIX
+
+## Move output files back
+rm $WORKDIR$BEAGLE
+cp * $INPUT_PATH' | sbatch
+```
+
+<br>
+
+#### Output
+
+For each k value, NGSadmix outputs four files. The following descriptions are copied from the NGSadmix [website](http://www.popgen.dk/software/index.php/NgsAdmix):
+
+* Log likelihood of the estimates: a `.log` file that summarizes the run. The Command line used for running the program, what the likelihood is every 50 iterations, and finally how long it took to do the run.
+
+* Estimated allele frequency: a zipped `.fopt` file, that contains an estimate of the allele frequency in each of the 3 assumed ancestral populations. There is a line for each locus.
+
+* Estimated admixture proportions: a `.qopt` file, that contains an estimate of the individual's ancestry proportion (admixture) from each of the three assumed ancestral populations for all individuals. There is a line for each individual.
+
+The fourth file is a `.filter` file, but it tends to be empty in our NGSadmix runs and we are not certain what this file is for. 
+
+You can then read these files (especially the `.qopt` file) with your favorite programming language for analysis and visualization.
+
+<br>
+
+#### Notes
+
+* NGSadmix tends to be more computationally intensive than PCAngsd, but with LD-pruned SNPs and especially if a computer cluster is available, the runtime should be quite manageable (e.g. ~ a few hours to a day).
+
+<br>
+
+## PCAngsd (IN CONSTRUCTION)
 
 Use the [run_pcangsd.sh](https://github.com/therkildsen-lab/genomic-data-analysis/blob/master/scripts/run_pcangsd.sh) to run an admixture analysis with PCAngsd. A range of files and parameters have to be provided in the following order:
 
@@ -51,3 +170,15 @@ admix \
 MINE \
 MAXE > path/output_logfile.nohup &
 ```
+
+<br>
+
+## Ohana (IN CONSTRUCTION)
+
+<br>
+
+## Example workflow
+
+* [Admixture analysis the Greenland cod project](https://github.com/therkildsen-lab/greenland-cod/blob/master/markdowns/admixture_analysis.md)
+
+<br>

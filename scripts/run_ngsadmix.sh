@@ -1,16 +1,23 @@
 #!/bin/bash
 ## This script is used to run ngsAdmix. See http://www.popgen.dk/software/index.php/NgsAdmix for details. 
 
-BASEDIR=$1 # Path to the base directory where adapter clipped fastq file are stored in a subdirectory titled "adapter_clipped" and into which output files will be written to separate subdirectories. An example for the Greenland cod data is: /workdir/cod/greenland-cod/
-BEAGLE=$2 # Path to the beagle formatted genotype likelihood file
+INPUT_PATH=$1 # Path to the directory where the beagle formatted genotype likelihood file is stored. An example for the Greenland cod data is: /workdir/cod/greenland-cod/angsd/
+BEAGLE=$2 # Name the beagle formatted genotype likelihood file. An example for the Greenland cod data is: bam_list_realigned_mincov_contamination_filtered_mindp368_maxdp928_minind167_minq20_downsampled_unlinked.beagle.gz
 MINMAF=$3 # Minimum allele frequency filter
-MINK=$4 # Minimum number of K
-MAXK=$5 # Maximum number of K
+MINK=$4 # Minimum value of K
+MAXK=$5 # Maximum value of K
+THREADS=${6-8} # Number of threads to use, default value is 8, but the program can use a lot more if they are made available
+NGSADMIX=${7:-'/programs/NGSadmix/NGSadmix'} # Path to NGSAdmix, default value is '/programs/NGSadmix/NGSadmix'
 
-PREFIX=`echo $BEAGLE | sed 's/\..*//' | sed -e 's#.*/\(\)#\1#'` 
+PREFIX=${BEAGLE%%.*}
 
 for ((K = $MINK; K <= $MAXK; K++)); do
 	#run ngsAdmix
 	echo $K
-	/workdir/Programs/NGSadmix -likes $BEAGLE -K $K -P 16 -o $BASEDIR'angsd/ngsadmix_'$PREFIX'_k'$K -minMaf $MINMAF
+	$NGSADMIX \
+	-likes $INPUT_PATH$BEAGLE \
+	-K $K \
+	-P $THREADS \
+	-o $INPUT_PATH'/ngsadmix_'$PREFIX'_k'$K \
+	-minMaf $MINMAF
 done
