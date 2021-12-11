@@ -2,7 +2,7 @@
 ## This script is used to call SNPs using angsd
 
 BAMLIST=$1 # Path to textfile listing bamfiles to include in global SNP calling with absolute paths
-BASEDIR=$2 # Path to the base directory where adapter clipped fastq file are stored in a subdirectory titled "adapter_clipped" and into which output files will be written to separate subdirectories. An example for the Greenland cod data is: /workdir/cod/greenland-cod/
+BASEDIR=$2 # Path to the base directory where output files will be written to a subdirectory named "angsd/". An example for the Greenland cod data is: /workdir/cod/greenland-cod/
 REFERENCE=$3 # Path to reference genome
 MINDP=$4 # Minimum depth filter
 MAXDP=$5 # Maximum depth filter
@@ -22,7 +22,7 @@ OUTBASE=$BAMLISTNAME'_mindp'$MINDP'_maxdp'$MAXDP'_minind'$MININD'_minq'$MINQ
 
 ## Call SNPs
 $ANGSD -b $BAMLIST -ref $REFERENCE -out $BASEDIR'angsd/'$OUTBASE \
--GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doCounts 1 -doDepth 1 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 \
+-GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 1 -doCounts 1 -doDepth 1 -maxDepth 10000 -dumpCounts 1 -doIBS 1 -makematrix 1 -doCov 1 \
 -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD \
 -minQ $MINQ -minMapQ $MINMAPQ \
 -SNP_pval 1e-6 -minMaf $MINMAF \
