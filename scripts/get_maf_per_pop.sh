@@ -11,7 +11,10 @@ MINDP=$7 # Minimum depth filter
 MAXDP=$8 # Maximum depth filter
 MININD=$9 # Minimum individual filter
 MINQ=${10} # Minimum quality filter
-MINMAPQ=${11:-20} #Minimum mapping quality (alignment score) filter, default value is 20
+MINMAPQ=${11:-20} # Minimum mapping quality (alignment score) filter, default value is 20
+ANGSD=${12:-/workdir/programs/angsd0.931/angsd/angsd} # Path to ANGSD, default value is /workdir/programs/angsd0.931/angsd/angsd
+THREADS=${13:-8} # Number of parallel threads to use, default value is 8.
+EXTRA_ARG=${14:-'-remove_bads 1 -only_proper_pairs 1 -C 50'} # Extra arguments when running ANGSD, default value is '-remove_bads 1 -only_proper_pairs 1 -C 50'
 
 OUTBASE=`echo $SNPLIST | sed 's/\..*//' | sed -e 's#.*\/\(\)#\1#'`
 CHRLIST=`echo $SNPLIST | sed 's/\..*//'`.chrs
@@ -22,12 +25,15 @@ fi
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 	echo $POP
-	/workdir/Programs/angsd/angsd \
+	$ANGSD \
 	-b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' \
 	-anc $REFERENCE \
+	-ref $REFERENCE \
 	-out $OUTDIR$POP'_'$OUTBASE'_popminind'$MININD \
-	-dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doPost 1 -doVcf 1 -doCounts 1 -doDepth 1 -dumpCounts 1 \
-	-P 16 \
-	-setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ -sites $SNPLIST -rf $CHRLIST \
+	-dosaf 1 -GL 1 -doGlf 2 -doMaf 1 -doMajorMinor 3 -doCounts 1 -doDepth 1 -dumpCounts 1 \
+	-P $THREADS \
+	-setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ \
+	-sites $SNPLIST -rf $CHRLIST \
+	$EXTRA_ARG \
 	>& $BASEDIR'nohups/'$POP'_'$OUTBASE'_popminind'$MININD'_maf.log'
 done
