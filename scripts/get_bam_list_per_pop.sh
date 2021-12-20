@@ -13,6 +13,6 @@ fi
 
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
 	echo $POP
-	SAMPLESEQID=`grep -w $POP $SAMPLETABLE | cut -f1` 
+	SAMPLESEQID=`awk  -F'\t' -v col="$POPCOLUMN" -v pop="$POP" 'BEGIN{OFS=FS} $col==pop' $SAMPLETABLE | cut -f1` 
 	grep -F "${SAMPLESEQID}" $BAMLIST > $BASEDIR'sample_lists/bam_list_per_pop/'$OUTNAME$POP'.txt'
 done
