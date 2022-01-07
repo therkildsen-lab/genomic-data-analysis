@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
-#SBATCH --job-name=get_map_per_pop
-#SBATCH --output=get_map_per_pop.log
+#SBATCH --job-name=get_maf_per_pop
+#SBATCH --output=get_maf_per_pop.log
 
 # Keep a record of the Job ID
 echo $SLURM_JOB_ID
