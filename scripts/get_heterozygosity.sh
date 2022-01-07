@@ -8,8 +8,16 @@ MINDP=$4 # Minimum depth filter
 MAXDP=$5 # Maximum depth filter
 MINQ=$6 # Minimum quality filter
 MINMAPQ=$7 # Minimum mapping quality filter
+ANGSD=${8:-/workdir/programs/angsd0.931/angsd/angsd} # Path to ANGSD, default value is /workdir/programs/angsd0.931/angsd/angsd
+ANGSD_MISC=${9:-/workdir/programs/angsd0.931/angsd/misc} # Path to the misc folder in ANGSD, default value is /workdir/programs/angsd0.931/angsd/misc
+THREADS=${10:-8} # Number of parallel threads to use, default value is 8.
+EXTRA_ARG_SAF=${11:-'-remove_bads 1 -only_proper_pairs 1 -C 50'} # Extra arguments when running saf estimation, default value is '-remove_bads 1 -only_proper_pairs 1 -C 50'
+EXTRA_ARG_SFS=${12:-''} # Extra arguments when running sfs estimation, default value is ''
+EXTRA_OUTNAME=${13:-''} # Extra suffix in output name, default value is ''
 
 OUTDIR=$BASEDIR'angsd/heterozygosity/'
+REALSFS=${ANGSD_MISC}/realSFS
+THETASTAT=${ANGSD_MISC}/thetaStat
 
 if [ ! -d "$OUTDIR" ]; then
 	mkdir $OUTDIR
@@ -17,56 +25,51 @@ fi
 
 for LINE in `cat $BAMLIST`; do
 
-    NAME_TEMP=`echo "${LINE%.*}"`
-    NAME=`echo "${NAME_TEMP##*/}"`
-	echo $NAME
-    OUTBASE=$NAME'_mindp'$MINDP'_maxdp'$MAXDP'_minq'$MINQ'_minmapq'$MINMAPQ
+  NAME_TEMP=`echo "${LINE%.*}"`
+  NAME=`echo "${NAME_TEMP##*/}"`
+  echo $NAME
+  OUTBASE=$NAME'_mindp'$MINDP'_maxdp'$MAXDP'_minq'$MINQ'_minmapq'$MINMAPQ$EXTRA_OUTNAME
 
 	## Get saf file
-	/workdir/programs/angsd0.931/angsd/angsd \
-    -i $LINE \
-    -anc $REFERENCE \
-    -out $OUTDIR$OUTBASE \
-    -doSaf 1 \
-    -GL 1 \
-    -P 8 \
-    -doCounts 1 \
-    -setMinDepth $MINDP \
-    -setMaxDepth $MAXDP \
-    -minQ $MINQ \
-    -minmapq $MINMAPQ 
+	$ANGSD \
+  -i $LINE \
+  -anc $REFERENCE \
+  -ref $REFERENCE \
+  -out $OUTDIR$OUTBASE \
+  -doSaf 1 \
+  -GL 1 \
+  -P $THREADS \
+  -doCounts 1 \
+  -setMinDepth $MINDP \
+  -setMaxDepth $MAXDP \
+  -minQ $MINQ \
+  -minmapq $MINMAPQ \
+  $EXTRA_ARG_SAF
     
-    ## Get SFS from saf
-    /workdir/programs/angsd0.931/angsd/misc/realSFS \
-    $OUTDIR$OUTBASE'.saf.idx' \
-    -P 8 \
-    > $OUTDIR$OUTBASE'.ml'
+  ## Get SFS from saf
+  $REALSFS \
+  $OUTDIR$OUTBASE'.saf.idx' \
+  -P $THREADS \
+  $EXTRA_ARG_SFS \
+  > $OUTDIR$OUTBASE'.ml'
     
-    ## Generate per site thetas
-    /workdir/programs/angsd0.931/angsd/angsd \
-    -i $LINE \
-    -out $OUTDIR$OUTBASE \
-    -doThetas 1 \
-    -doSaf 1 \
-    -pest $OUTDIR$OUTBASE'.ml' \
-    -anc $REFERENCE \
-    -GL 1 \
-    -P 8 \
-    -doCounts 1 \
-    -setMinDepth $MINDP \
-    -setMaxDepth $MAXDP \
-    -minQ $MINQ \
-    -minmapq $MINMAPQ 
-    
-    ## Print per site thetas
-    /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
-    $OUTDIR$OUTBASE'.thetas.idx' | \
-    gzip \
-    > $OUTDIR$OUTBASE'.thetas.tsv.gz'
+  ## Generate per site thetas
+  $REALSFS saf2theta \
+  $OUTDIR$OUTBASE'.saf.idx' \
+  -outname $OUTDIR$OUTBASE \
+  -sfs $OUTDIR$OUTBASE'.ml' \
+  -anc $REFERENCE \
+  -P $THREADS 
 
-    ## Print average thetas
-    /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
-    $OUTDIR$OUTBASE'.thetas.idx' \
-    -outnames $OUTDIR$OUTBASE'.average_thetas.tsv'
+  ## Print per site thetas
+  $THETASTAT print \
+  $OUTDIR$OUTBASE'.thetas.idx' | \
+  gzip \
+  > $OUTDIR$OUTBASE'.thetas.tsv.gz'
+
+  ## Print average thetas
+  $THETASTAT do_stat \
+  $OUTDIR$OUTBASE'.thetas.idx' \
+  -outnames $OUTDIR$OUTBASE'.average_thetas'
 
 done
