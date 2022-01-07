@@ -13,9 +13,17 @@ MINQ=$9 # Minimum quality filter
 MINMAPQ=${10} # Minimum mapping quality filter
 WINDOW_SIZE=${11} # Window size when estimating theta in sliding windows
 STEP_SIZE=${12} # Step size when estimating theta in sliding windows
+ANGSD=${13:-/workdir/programs/angsd0.931/angsd/angsd} # Path to ANGSD, default value is /workdir/programs/angsd0.931/angsd/angsd
+ANGSD_MISC=${14:-/workdir/programs/angsd0.931/angsd/misc} # Path to the misc folder in ANGSD, default value is /workdir/programs/angsd0.931/angsd/misc
+THREADS=${15:-8} # Number of parallel threads to use, default value is 8.
+EXTRA_ARG_SAF=${16:-'-remove_bads 1 -only_proper_pairs 1 -C 50'} # Extra arguments when running saf estimation, default value is '-remove_bads 1 -only_proper_pairs 1 -C 50'
+EXTRA_ARG_SFS=${17:-''} # Extra arguments when running sfs estimation, default value is ''
+EXTRA_OUTNAME=${18:-''} # Extra suffix in output name, default value is ''
 
-OUTBASE=$BAMLISTPREFIX'popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ'_minmapq'$MINMAPQ
+OUTBASE=$BAMLISTPREFIX'popmindp'$MINDP'_popmaxdp'$MAXDP'_popminind'$MININD'_minq'$MINQ'_minmapq'$MINMAPQ$EXTRA_OUTNAME
 OUTDIR=$BASEDIR'angsd/popminind'$MININD'/'
+REALSFS=${ANGSD_MISC}/realSFS
+THETASTAT=${ANGSD_MISC}/thetaStat
 
 if [ ! -d "$OUTDIR" ]; then
     mkdir $OUTDIR
@@ -24,49 +32,47 @@ fi
 for POP in `tail -n +2 $SAMPLETABLE | cut -f $POPCOLUMN | sort | uniq`; do 
     echo $POP
     ## Get saf file
-    /workdir/programs/angsd0.931/angsd/angsd \
+    $ANGSD \
     -b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' \
     -anc $REFERENCE \
+    -ref $REFERENCE \
     -out $OUTDIR$POP'_'$OUTBASE \
     -doSaf 1 \
     -doCounts 1 \
     -GL 1 \
-    -P 8 \
-    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ
+    -P $THREADS \
+    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ \
+    $EXTRA_ARG_SAF
     
     ## Get SFS from saf
-    /workdir/programs/angsd0.931/angsd/misc/realSFS \
+    $REALSFS \
     $OUTDIR$POP'_'$OUTBASE'.saf.idx' \
-    -P 8 \
+    -P $THREADS \
+    $EXTRA_ARG_SFS \
     > $OUTDIR$POP'_'$OUTBASE'.sfs'
     
     ## Estimate theta
-    /workdir/programs/angsd0.931/angsd/angsd \
-    -b $BASEDIR'sample_lists/bam_list_per_pop/'$BAMLISTPREFIX$POP'.txt' \
-    -out $OUTDIR$POP'_'$OUTBASE \
-    -doThetas 1 \
-    -doSaf 1 \
-    -pest $OUTDIR$POP'_'$OUTBASE'.sfs' \
+    $REALSFS saf2theta \
+    $OUTDIR$POP'_'$OUTBASE'.saf.idx' \
+    -outname $OUTDIR$POP'_'$OUTBASE \
+    -sfs $OUTDIR$POP'_'$OUTBASE'.sfs' \
     -anc $REFERENCE \
-    -GL 1 \
-    -P 8 \
-    -doCounts 1 \
-    -setMinDepth $MINDP -setMaxDepth $MAXDP -minInd $MININD -minQ $MINQ -minMapQ $MINMAPQ
+    -P $THREADS 
     
     ## Print per-SNP theta
-    /workdir/programs/angsd0.931/angsd/misc/thetaStat print \
+    $THETASTAT print \
     $OUTDIR$POP'_'$OUTBASE'.thetas.idx' | \
     gzip \
     > $OUTDIR$POP'_'$OUTBASE'.thetas.tsv.gz'
     
     ## Calculate fixed window theta
-    /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
+    $THETASTAT do_stat \
     $OUTDIR$POP'_'$OUTBASE'.thetas.idx' \
     -win $WINDOW_SIZE -step $STEP_SIZE \
-    -outnames $OUTDIR$POP'_'$OUTBASE'.'$WINDOW_SIZE'window_'$STEP_SIZE'step_thetas.gz'
+    -outnames $OUTDIR$POP'_'$OUTBASE'.'$WINDOW_SIZE'window_'$STEP_SIZE'step_thetas'
     
     ## Calculate per-chromosome average theta
-    /workdir/programs/angsd0.931/angsd/misc/thetaStat do_stat \
+    $THETASTAT do_stat \
     $OUTDIR$POP'_'$OUTBASE'.thetas.idx' \
-    -outnames $OUTDIR$POP'_'$OUTBASE'.average_thetas.gz'
+    -outnames $OUTDIR$POP'_'$OUTBASE'.average_thetas'
 done
