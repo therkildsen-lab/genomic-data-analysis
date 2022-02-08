@@ -11,22 +11,15 @@ beagle <- args[4]
 lg <- args[5]
 out_dir <- args[6]
 
-# cov_matrix <- "bam_list_realigned_mindp161_maxdp768_minind97_minq20_LG01.beagle.x00.gz.cov.npy"
-# pc <- 2
-# snp <- 10000
-# beagle <- "bam_list_realigned_mindp161_maxdp768_minind97_minq20_LG01.beagle.x00.gz"
-# lg <- "LG01"
-# out_dir <- "/local/workdir/cod/greenland-cod/angsd/local_pca/"
-
 ## Load required libraries
 library(data.table)
-library(lostruct)
+#library(lostruct)
 suppressWarnings(suppressMessages(library(tidyverse)))
 library(RcppCNPy)
 
 ## Read covariance matrix and perform eigen decomposition
-c <- npyLoad(cov_matrix) %>%
-	as.matrix()
+c <-read_delim(cov_matrix, delim = " ", col_names = FALSE) %>%
+  as.matrix()
 e <- eigen(c)
 e_values <- e$values
 e_vectors <- as.data.frame(e$vectors)
