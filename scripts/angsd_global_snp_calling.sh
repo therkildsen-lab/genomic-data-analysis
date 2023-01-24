@@ -10,7 +10,7 @@ MININD=$6 # Minimum individual filter
 MINQ=$7 # Minimum quality filter
 MINMAF=$8 # Minimum minor allele frequency filter
 MINMAPQ=${9:-20} # Minimum mapping quality (alignment score) filter, default value is 20
-ANGSD=${10:-/workdir/programs/angsd0.931/angsd/angsd} # Path to ANGSD, default value is /workdir/programs/angsd0.931/angsd/angsd
+ANGSD=${10:-/programs/angsd-0.940/angsd} # Path to ANGSD, default value is /programs/angsd-0.940/angsd
 THREADS=${11:-8} # Number of parallel threads to use, default value is 8.
 EXTRA_ARG=${12:-'-remove_bads 1 -only_proper_pairs 1 -C 50'} # Extra arguments when running ANGSD, default value is '-remove_bads 1 -only_proper_pairs 1 -C 50'
 
