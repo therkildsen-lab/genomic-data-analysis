@@ -6,6 +6,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+### This script was written by Dr. Nicolas Lou and modified by Carl St. John ###
 
 ## load appropriate libraries and data 
 
