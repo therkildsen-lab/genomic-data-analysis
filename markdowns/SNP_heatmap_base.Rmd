@@ -1,0 +1,84 @@
+---
+title: "SNP heatmap base code"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load appropriate libraries and data 
+
+```{r message=F, warning=F}
+library(tidyverse)
+library(knitr)
+sample_table <- read_tsv("/PATH/TO/YOUR/METADATA")
+
+## Define a function to get allele dosage from genotype likelihood
+get_allele_dosage <- function(x){
+  if(x[2]==x[3] & x[3]==x[4]){
+    return(NA) ## return NA at sites with no coverages (where rescaled GLs are 0.333, 0.333, 0.333)
+  } else {
+    if(x[1]>0.5) { ## polarize the GLs based on frequency at reference individual
+      x[2:4] <- x[4:2]
+    }
+    return(x[3] + 2*x[4])
+  }
+}
+```
+
+```{r message=F}
+# read beagle file
+beagle <- read_tsv("/PATH/TO/BEAGLE/FILE") 
+```
+
+```{r}
+# try nicolas' and liams script for extracting allelic dosage and polarize in same step
+# separate linkage group and position 
+beagle <- beagle %>% separate(marker, c(NA ,"lg", "pos")) %>% 
+  dplyr::select(-allele2) %>% mutate(lg = "49") #manually name chromosome 
+
+# set up the data frame, ncols should equal the number of samples and nrows should equal the number of loci
+dosage <- as.data.frame(matrix(ncol = (ncol(beagle)-3)/3+3, nrow = nrow(beagle)))
+dosage[,1:3]=beagle[,1:3]
+
+## Get allele dosage iteratively from each individual
+# 4 columns are extracted for each individual. the 1st of the four columns is the GL for the major allele for the polarizing individual. Choose the reference column according to the individual you want to polarize from.
+for (j in 1:((ncol(beagle)-3)/3)){
+  temp_ind <- beagle[,c(67, (1+3*j):(3+3*j))]
+  dosage[,3+j] <- apply(temp_ind, 1, get_allele_dosage)
+}
+
+# rename columns to match sample names
+
+colnames(dosage) <- c("V1","V2","V3",as.double(sample_table$ID_COLUMN))
+```
+
+#### Convert to long format for plotting
+
+```{r}
+dosage_long <- pivot_longer(dosage, cols = 4:ncol(dosage), names_to = "ID_COLUMN", values_to = "allele_dosage") %>% 
+  dplyr::select(-V3) %>% 
+  rename(lg = V1, pos = V2) %>% 
+  left_join(dplyr::select(sample_table, population, Loc, ID_COLUMN), by = "ID_COLUMN")
+```
+
+## Plot genotype heatmaps
+
+```{r}
+dosage_long_plot <- dosage_long %>% 
+  mutate(allele_dosage_rounded = as.character(round(allele_dosage))) %>% 
+  ggplot(aes(x=as_factor(pos), y=ID_COLUMN, fill = allele_dosage_rounded)) +
+  geom_tile() +
+  scale_fill_manual(values = c("gold","darkorange3","firebrick4"), na.value = "grey80") +
+  facet_grid(Loc~lg, scales = "free", space = "free") +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+        axis.title = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.spacing.x = unit(0.2, "lines"),
+        strip.text.y = element_text(angle = 0))
+dosage_long_plot
+```
